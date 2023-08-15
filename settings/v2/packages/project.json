@@ -1,0 +1,41 @@
+{
+  "__version__": "1.0.5",
+  "custom_joint_texture_layouts": [],
+  "layer": [
+    {
+      "name": "SCENE2D",
+      "value": 1
+    },
+    {
+      "name": "ACTOR2D",
+      "value": 2
+    }
+  ],
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "SCENE_ OBSTACLE"
+      },
+      {
+        "index": 2,
+        "name": "ACTOR"
+      },
+      {
+        "index": 3,
+        "name": "WEAPON"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 1,
+      "1": 12,
+      "2": 14,
+      "3": 14
+    }
+  },
+  "general": {
+    "designResolution": {
+      "width": 1560
+    }
+  }
+}
