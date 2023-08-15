@@ -29,15 +29,13 @@ export class ActorManager extends Component {
         role.node.setParent(this.layer);
         this.model.role = role;
 
-        resources.load("prefab/weapons/Weapon1", Prefab, (err, asset) => {
+        resources.load("prefab/weapons/RoleWeapon", Prefab, (err, asset) => {
             if (err) {
                 error(err);
                 return;
             }
             let weaponNode = instantiate(asset);
             let weapon = weaponNode.getComponent(EntityWeapon);
-            weapon.node.setPosition(100, 0, 0);
-            weapon.node.setParent(this.layer);
             this.model.role.setWeapon(weapon, 20);
         });
     }

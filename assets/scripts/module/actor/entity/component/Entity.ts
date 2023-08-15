@@ -16,8 +16,6 @@ export class Entity extends Component {
     public rigidBody: RigidBody2D = null;
     @property(Collider2D)
     public collider: Collider2D = null;
-    @property(HingeJoint2D)
-    public hingeJoint: HingeJoint2D = null;
 
     public weapon: EntityWeapon = null;
 
@@ -38,7 +36,6 @@ export class Entity extends Component {
     private _tempPos: Vec2 = new Vec2();
 
     protected onLoad(): void {
-        this.hingeJoint.enabled = false;
         this._bodyTrans = this.body.getComponent(UITransform);
     }
 
@@ -59,20 +56,19 @@ export class Entity extends Component {
     }
 
     public setWeapon(weapon: EntityWeapon, linkLength: number) {
-        this.weapon = weapon
-        if (weapon) {
-            this.hingeJoint.connectedBody = weapon.rigidBody;
-            this.hingeJoint.connectedAnchor.x = this.getBodyRadius() + weapon.getBodyRadius() + linkLength;
-            this.hingeJoint.connectedAnchor.y = 0;
-            this.hingeJoint.enableMotor = true;
-            weapon.setHingeJoint(this.hingeJoint);
-        } else {
-            this.hingeJoint.connectedBody = null;
+        let preWeapon = this.weapon;
+        if (preWeapon) {
+            preWeapon.destroy();
         }
 
-        this.scheduleOnce(() => {
-            this.hingeJoint.enabled = !!this.weapon;
-        });
+        this.weapon = weapon
+
+        if (weapon) {
+            let weaponNode = weapon.node;
+            weaponNode.setPosition(0, 0);
+            this.node.addChild(weaponNode);
+            weapon.setRadius(this.getBodyRadius() + linkLength)
+        }
     }
 
     public getBodyRadius() {
