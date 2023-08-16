@@ -24,6 +24,13 @@ export class EntityWeapon extends Component {
     @property(EntityWeaponRotator)
     public rotator: EntityWeaponRotator = null;
 
+    private _limitReverse: boolean = false;
+    private setLimitReverse() {
+        this._limitReverse = true;
+        this.scheduleOnce(() => this._limitReverse = false);
+
+    }
+
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
@@ -44,8 +51,10 @@ export class EntityWeapon extends Component {
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         log("begin selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
-        if (this.rotator)
+        if (this.rotator && !this._limitReverse) {
             this.rotator.reverseDirection();
+            this.setLimitReverse();
+        }
     }
 
     private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
