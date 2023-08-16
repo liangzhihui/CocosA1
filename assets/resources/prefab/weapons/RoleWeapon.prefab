@@ -424,7 +424,8 @@
     "__prefab": {
       "__id__": 16
     },
-    "speed": 240,
+    "speed": 440,
+    "direction": 1,
     "_id": ""
   },
   {
