@@ -5,6 +5,7 @@ export function zero(out: Vec2) {
     return Vec2.set(out, 0, 0);
 }
 
+/** 限制向量的大小 */
 export function limit(out: Vec2, a: Vec2, len: number): Vec2 {
     let aLen = a.length();
     if (aLen > len)
@@ -13,6 +14,7 @@ export function limit(out: Vec2, a: Vec2, len: number): Vec2 {
         return Vec2.copy(out, a);
 }
 
+/** 设置向量的大小 */
 export function setLength(out: Vec2, a: Vec2, len: number): Vec2 {
     let aLen = a.length();
     if (aLen == 0)
@@ -76,6 +78,7 @@ export function rotationBetween(a: Vec2, b:Vec2): number {
 
 const v2_a: Vec2 = new Vec2();
 const v2_b: Vec2 = new Vec2();
+/** 计算点到选段的距离 */
 export function distToSegmentSquared(point: Vec2, p1: Vec2, p2: Vec2) {
     Vec2.subtract(v2_a, p2, p1);
     Vec2.subtract(v2_b, point, p1);
@@ -89,4 +92,15 @@ export function distToSegmentSquared(point: Vec2, p1: Vec2, p2: Vec2) {
     } else {
         return Vec2.squaredDistance(point, v2_a.multiplyScalar(t).add(p1));
     }
+}
+
+export function isPointInPoly(poly: Vec2[], pt: Vec2) {
+    let c = false
+    for (let i = -1, l = poly.length, j = l - 1; ++i < l; j = i) {
+        if (((poly[i].y <= pt.y && pt.y < poly[j].y) || (poly[j].y <= pt.y && pt.y < poly[i].y))
+            && (pt.x < (poly[j].x - poly[i].x) * (pt.y - poly[i].y) / (poly[j].y - poly[i].y) + poly[i].y)) {
+            c = !c;
+        }
+    }
+    return c;
 }

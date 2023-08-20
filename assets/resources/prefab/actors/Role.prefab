@@ -25,14 +25,14 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 14
+        "__id__": 12
       },
       {
-        "__id__": 16
+        "__id__": 14
       }
     ],
     "_prefab": {
-      "__id__": 18
+      "__id__": 16
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -85,13 +85,10 @@
       },
       {
         "__id__": 9
-      },
-      {
-        "__id__": 11
       }
     ],
     "_prefab": {
-      "__id__": 13
+      "__id__": 11
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -265,8 +262,8 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": -25.5,
-        "y": 9.5
+        "x": -39.3,
+        "y": 6.1
       },
       {
         "__type__": "cc.Vec2",
@@ -295,8 +292,8 @@
       },
       {
         "__type__": "cc.Vec2",
-        "x": -19.5,
-        "y": 24.5
+        "x": -11.5,
+        "y": 35.6
       }
     ],
     "_id": ""
@@ -304,42 +301,6 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "0euyZX+KtFzqew+d0Yes/m"
-  },
-  {
-    "__type__": "cc.HingeJoint2D",
-    "_name": "",
-    "_objFlags": 0,
-    "__editorExtras__": {},
-    "node": {
-      "__id__": 2
-    },
-    "_enabled": false,
-    "__prefab": {
-      "__id__": 12
-    },
-    "anchor": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "connectedAnchor": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 0
-    },
-    "collideConnected": false,
-    "connectedBody": null,
-    "_enableLimit": false,
-    "_lowerAngle": 0,
-    "_upperAngle": 0,
-    "_enableMotor": true,
-    "_maxMotorTorque": 500,
-    "_motorSpeed": 500,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.CompPrefabInfo",
-    "fileId": "cfY/ZQSpJEOo0tz9pi/9JL"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -364,7 +325,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 15
+      "__id__": 13
     },
     "_contentSize": {
       "__type__": "cc.Size",
@@ -392,7 +353,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 17
+      "__id__": 15
     },
     "body": {
       "__id__": 2

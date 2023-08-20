@@ -1,10 +1,11 @@
-import { Collider2D, Component, HingeJoint2D, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact } from "cc";
+import { Collider2D, Component, HingeJoint2D, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, PolygonCollider2D } from "cc";
 import { setLength } from "../../../../utils/vec2Util";
 import { EntityWeapon } from "./EntityWeapon";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
+const v2_2 = new Vec2();
 const v3 = new Vec3();
 
 @ccclass("Entity")
@@ -36,6 +37,7 @@ export class Entity extends Component {
 
     private _tempPos: Vec2 = new Vec2();
     private _moveVec: Vec2 = new Vec2();
+    private _oppositeVecMap: Map<Collider2D, Vec2> = new Map();
 
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
@@ -53,8 +55,17 @@ export class Entity extends Component {
         this.node.setPosition(v3);
     }
 
+    public checkMove(vec: Vec2, out: Vec2) {
+        out.set(vec);
+        for (let [otherCollider, oppositeVec] of this._oppositeVecMap.entries()) {
+            if (oppositeVec.dot(out) < 0) {
+                v2.set(-oppositeVec.y, oppositeVec.x);
+                out.project(v2);
+            }
+        }
+    }
+
     public move(vec: Vec2) {
-        this._moveVec.set(vec);
         this._getPosition(this._tempPos);
         this._tempPos.add(vec);
         this._setPosition(this._tempPos);
@@ -91,7 +102,9 @@ export class Entity extends Component {
             v2.set(x, y);
             setLength(v2, v2, this.maxSpeed * dt);
             if (!v2.equals(Vec2.ZERO)) {
-                this.move(v2);
+                this._moveVec.set(v2);
+                this.checkMove(this._moveVec, v2_2)
+                this.move(v2_2);
             }
         }
     }
@@ -100,17 +113,22 @@ export class Entity extends Component {
         let otherGroup = otherCollider.group;
         if (otherGroup == PhysicGroupIndex.Actor ||
             otherGroup == PhysicGroupIndex.SceneObstacle) {
-            
+
             const worldManifold = contact.getWorldManifold();
             const normal = worldManifold.normal;
-            const moveVec = this._moveVec;
-            if (normal.dot(moveVec) < 0) {
-                Vec2.negate(v2, moveVec);
-                this.move(v2)
-            }
+
+            this._oppositeVecMap.set(otherCollider, normal);
+            // const moveVec = this._moveVec;
+            // if (normal.dot(moveVec) < 0) {
+            //     Vec2.negate(v2, moveVec);
+            //     this.move(v2)
+            // }
         }
     }
 
     private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        if (this._oppositeVecMap.has(otherCollider)) {
+            this._oppositeVecMap.delete(otherCollider);
+        }
     }
 }
