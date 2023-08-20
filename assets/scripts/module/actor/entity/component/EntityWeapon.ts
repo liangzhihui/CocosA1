@@ -1,5 +1,6 @@
 import { Collider2D, Component, RigidBody2D, _decorator, Node, UITransform, Contact2DType, IPhysics2DContact, log as cclog, Vec2, game, js } from "cc";
 import { EntityWeaponRotator } from "./EntityWeaponRotator";
+import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 const { ccclass, property } = _decorator;
 
 const v2_1 = new Vec2();
@@ -50,14 +51,18 @@ export class EntityWeapon extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        log("begin selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
-        if (this.rotator && !this._limitReverse) {
-            this.rotator.reverseDirection();
-            this.setLimitReverse();
+        // log("begin selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
+        let otherGroup = otherCollider.group;
+        if (otherGroup == PhysicGroupIndex.SceneObstacle ||
+            otherGroup == PhysicGroupIndex.Weapon) {
+            if (this.rotator && !this._limitReverse) {
+                this.rotator.reverseDirection();
+                this.setLimitReverse();
+            }
         }
     }
 
     private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        log("end selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
+        // log("end selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
     }
 }

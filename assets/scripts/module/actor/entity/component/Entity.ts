@@ -1,6 +1,7 @@
-import { Collider2D, Component, HingeJoint2D, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node } from "cc";
+import { Collider2D, Component, HingeJoint2D, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact } from "cc";
 import { setLength } from "../../../../utils/vec2Util";
 import { EntityWeapon } from "./EntityWeapon";
+import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -34,9 +35,12 @@ export class Entity extends Component {
     }
 
     private _tempPos: Vec2 = new Vec2();
+    private _moveVec: Vec2 = new Vec2();
 
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
+        this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
     }
 
     private _getPosition(out: Vec2) {
@@ -50,6 +54,7 @@ export class Entity extends Component {
     }
 
     public move(vec: Vec2) {
+        this._moveVec.set(vec);
         this._getPosition(this._tempPos);
         this._tempPos.add(vec);
         this._setPosition(this._tempPos);
@@ -91,4 +96,21 @@ export class Entity extends Component {
         }
     }
 
+    private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        let otherGroup = otherCollider.group;
+        if (otherGroup == PhysicGroupIndex.Actor ||
+            otherGroup == PhysicGroupIndex.SceneObstacle) {
+            
+            const worldManifold = contact.getWorldManifold();
+            const normal = worldManifold.normal;
+            const moveVec = this._moveVec;
+            if (normal.dot(moveVec) < 0) {
+                Vec2.negate(v2, moveVec);
+                this.move(v2)
+            }
+        }
+    }
+
+    private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    }
 }

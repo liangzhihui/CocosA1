@@ -207,7 +207,7 @@
     "__prefab": {
       "__id__": 8
     },
-    "enabledContactListener": false,
+    "enabledContactListener": true,
     "bullet": false,
     "awakeOnLoad": true,
     "_group": 4,
@@ -402,9 +402,6 @@
     },
     "collider": {
       "__id__": 9
-    },
-    "hingeJoint": {
-      "__id__": 11
     },
     "maxSpeed": 200,
     "isRole": true,
