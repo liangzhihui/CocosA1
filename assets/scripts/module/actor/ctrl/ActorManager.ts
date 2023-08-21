@@ -35,6 +35,8 @@ export class ActorManager extends Component {
                 return;
             }
             let weaponNode = instantiate(asset);
+            this.layer.addChild(weaponNode);
+
             let weapon = weaponNode.getComponent(EntityWeapon);
             this.model.role.setWeapon(weapon, 20);
         });

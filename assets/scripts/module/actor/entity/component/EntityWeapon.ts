@@ -39,7 +39,7 @@ export class EntityWeapon extends Component {
     }
 
     public setRadius(value: number) {
-        this.body.setPosition(value + this.getBodyRadius(), 0);
+        this.rigidBody.node.setPosition(value + this.getBodyRadius(), 0);
     }
 
     public getBodyRadius() {
@@ -51,7 +51,6 @@ export class EntityWeapon extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        // log("begin selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
         let otherGroup = otherCollider.group;
         if (otherGroup == PhysicGroupIndex.SceneObstacle ||
             otherGroup == PhysicGroupIndex.Weapon) {
@@ -63,6 +62,5 @@ export class EntityWeapon extends Component {
     }
 
     private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        // log("end selfGroup:" + selfCollider.group + " otherGroup:" + otherCollider.group);
     }
 }
