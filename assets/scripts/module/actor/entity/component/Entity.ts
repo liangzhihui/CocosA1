@@ -104,7 +104,7 @@ export class Entity extends Component {
         if (otherGroup == PhysicGroupIndex.Weapon) {
             if (!this.isRole) {
                 let actor = A1.actorManager.getWeaponOwer(otherCollider);
-                if (!actor)
+                if (!actor || actor.node == selfCollider.node)
                     return;
 
                 this._getWorldPosition(v2, selfCollider.node);
