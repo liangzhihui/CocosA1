@@ -2,12 +2,12 @@
   "ver": "1.1.45",
   "importer": "prefab",
   "imported": true,
-  "uuid": "e0d7d488-adf4-449b-a1f7-5529fe669036",
+  "uuid": "f6c93f3e-2d2b-44ec-8ed6-63616e1988d4",
   "files": [
     ".json"
   ],
   "subMetas": {},
   "userData": {
-    "syncNodeName": "RoleWeapon"
+    "syncNodeName": "Monster1"
   }
 }

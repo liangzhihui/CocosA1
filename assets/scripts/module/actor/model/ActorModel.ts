@@ -7,6 +7,7 @@ const { ccclass } = _decorator
 export class ActorModel {
 
     public role: Entity = null;
+    public actors: Entity[] = [];
 
     private _nextId = 1;
     public generateId() {

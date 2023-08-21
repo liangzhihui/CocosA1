@@ -38,7 +38,7 @@
       }
     ],
     "_prefab": {
-      "__id__": 16
+      "__id__": 17
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -254,7 +254,9 @@
     "collider": {
       "__id__": 14
     },
-    "maxSpeed": 10,
+    "attr": {
+      "__id__": 16
+    },
     "isRole": true,
     "_entityId": 0,
     "_id": ""
@@ -372,6 +374,13 @@
   {
     "__type__": "cc.CompPrefabInfo",
     "fileId": "7asYMHOTRA/J1JwwA/PIiS"
+  },
+  {
+    "__type__": "EntityAttribute",
+    "hp": 100,
+    "maxMoveSpeed": 10,
+    "weaponAngleSpeed": 440,
+    "weaponBeatback": 24
   },
   {
     "__type__": "cc.PrefabInfo",

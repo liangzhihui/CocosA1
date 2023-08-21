@@ -1,17 +1,7 @@
-import { Collider2D, Component, RigidBody2D, _decorator, Node, UITransform, Contact2DType, IPhysics2DContact, log as cclog, Vec2, game, js } from "cc";
+import { Collider2D, Component, RigidBody2D, _decorator, Node, UITransform, Contact2DType, IPhysics2DContact } from "cc";
 import { EntityWeaponRotator } from "./EntityWeaponRotator";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 const { ccclass, property } = _decorator;
-
-const v2_1 = new Vec2();
-const v2_2 = new Vec2();
-const v2_3 = new Vec2();
-
-function log(msg: string) {
-    let totalTime: any = Math.round(game.totalTime * 1e3) / 1e3
-    totalTime = totalTime.toFixed(3)
-    cclog(js.formatStr("%s  %s", totalTime, msg));
-}
 
 @ccclass("EntityWeapon")
 export class EntityWeapon extends Component {
@@ -53,7 +43,8 @@ export class EntityWeapon extends Component {
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         let otherGroup = otherCollider.group;
         if (otherGroup == PhysicGroupIndex.SceneObstacle ||
-            otherGroup == PhysicGroupIndex.Weapon) {
+            otherGroup == PhysicGroupIndex.Weapon ||
+            otherGroup == PhysicGroupIndex.Actor) {
             if (this.rotator && !this._limitReverse) {
                 this.rotator.reverseDirection();
                 this.setLimitReverse();

@@ -1,4 +1,4 @@
-import { Component, Prefab, _decorator, instantiate, Node, resources, error } from "cc";
+import { Component, Prefab, _decorator, instantiate, Node, resources, error, Collider2D } from "cc";
 import { Entity } from "../entity/component/Entity";
 import { ActorModel } from "../model/ActorModel";
 import { EntityWeapon } from "../entity/component/EntityWeapon";
@@ -29,7 +29,7 @@ export class ActorManager extends Component {
         role.node.setParent(this.layer);
         this.model.role = role;
 
-        resources.load("prefab/weapons/RoleWeapon", Prefab, (err, asset) => {
+        resources.load("prefab/weapons/ActorWeapon", Prefab, (err, asset) => {
             if (err) {
                 error(err);
                 return;
@@ -39,6 +39,18 @@ export class ActorManager extends Component {
 
             let weapon = weaponNode.getComponent(EntityWeapon);
             this.model.role.setWeapon(weapon, 20);
+        });
+    }
+
+    public getWeaponOwer(collider: Collider2D) {
+        let weapon = this.model.role.weapon;
+        if (weapon && weapon.collider == collider)
+            return this.model.role;
+
+        return this.model.actors.find(actor => {
+            let weapon = actor.weapon;
+            if (weapon && weapon.collider == collider)
+                return actor;
         });
     }
 

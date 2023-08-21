@@ -1,7 +1,7 @@
 [
   {
     "__type__": "cc.Prefab",
-    "_name": "RoleWeapon",
+    "_name": "ActorWeapon",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_native": "",
@@ -13,7 +13,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "RoleWeapon",
+    "_name": "ActorWeapon",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": null,
@@ -351,7 +351,7 @@
       "__id__": 13
     },
     "enabledContactListener": true,
-    "bullet": true,
+    "bullet": false,
     "awakeOnLoad": true,
     "_group": 8,
     "_type": 1,
@@ -516,7 +516,7 @@
     "__prefab": {
       "__id__": 20
     },
-    "speed": 440,
+    "speed": 0,
     "direction": 1,
     "_id": ""
   },
