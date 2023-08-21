@@ -1,0 +1,178 @@
+<!--
+ * @Author: OreoWang
+ * @Email: ihc523@163.com
+ * @Date: 2022-03-23 10:12:09
+ * @LastEditors: OreoWang
+ * @LastEditTime: 2022-06-07 17:19:26
+ * @Description: 
+-->
+<div id="props-root">
+    <div class="settings" >
+        <div class="content">
+            <div class="wrap">
+                <ui-section expand="" header="Inspector">
+                    <ui-prop class="prop-script" v-if="!isRootNode()">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="Script" tooltip="Script"></ui-label>
+                            <ui-icon class="prop-icon" value="lock"></ui-icon>
+                        </div>
+                        <ui-asset class="row_item" slot="content" v-bind:value="getScriptUUID(props.uuid)"
+                        droppable="cc.Script" readonly tabindex="-1">
+                        </ui-asset>
+                    </ui-prop>
+                    <ui-prop class="" v-if="!isRootNode()">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="Type" tooltip="Type"></ui-label>
+                            <ui-icon class="prop-icon" value="lock"></ui-icon>
+                        </div>
+                        <ui-input class="row_item" slot="content" v-bind:value="props.group" :tooltip="props.group" readonly>
+                        </ui-input>
+                    </ui-prop>
+                    <ui-prop class="" v-if="!isRootNode()">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="Component" tooltip="Component"></ui-label>
+                            <ui-icon class="prop-icon" value="lock"></ui-icon>
+                        </div>
+                        <ui-input class="row_item" slot="content" v-bind:value="props.name" :tooltip="props.name" readonly>
+                        </ui-input>
+                    </ui-prop>
+                    <ui-prop class="prop-script" v-if="isRootNode()">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="TargetNode" tooltip="Target Node"></ui-label>
+                            <ui-icon class="prop-icon" value="lock"></ui-icon>
+                        </div>
+                        <!-- <ui-input class="row_item" slot="content" v-bind:value="props.name" :tooltip="props.name" readonly>
+                        </ui-input> -->
+                        <ui-node readonly class="row_item" slot="content" v-bind:value="getRootNodeUUID()" type="cc.Node" droppable="cc.Node" typename="Node" tabindex="-1">
+                        </ui-node>
+                    </ui-prop>
+                    <ui-prop class="" v-if="!isRootNode()">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="Tag" tooltip="Tag in tree"></ui-label>
+                            <!-- <ui-icon v-if="!isRootNode()" class="prop-icon" value="refresh"></ui-icon> -->
+                            <ui-button v-if="!isRootNode()" class="transparent prop-button" tooltip="Refresh Tag" tabindex="-1" @confirm="onRefreshTag()">
+                                <ui-icon class="prop-icon" value="refresh"></ui-icon>
+                            </ui-button>
+                        </div>
+                        <ui-input class="row_item" slot="content" v-on:change="onChangeTag" v-bind:value="props.tag" :tooltip="props.tag" :readonly="isRootNode()">
+                        </ui-input>
+                    </ui-prop>                
+                    <ui-prop class="">
+                        <div slot="label" class="row_item prop-label-content">
+                            <ui-label tabindex="-1" value="Title" tooltip="Title"></ui-label>
+                            <ui-icon v-if="isRootNode()" class="prop-icon" value="lock"></ui-icon>
+                        </div>
+                        <ui-input class="row_item" slot="content" v-on:change="onChangeTitle" v-bind:value="props.title" :tooltip="props.title" :readonly="isRootNode()">
+                        </ui-input>
+                    </ui-prop>
+                    
+                    <div v-show="showProps()">
+                        <div class="group-line"></div>
+                        <div v-for="(value, key) in props.properties" :key="key">
+                            <ui-prop class="" v-show="showOneProperty(key, value)">
+                                <div slot="label" class="row_item prop-label-content">
+                                    <ui-label tabindex="-1" :value="key" :tooltip="getPropertyTooltip(key, value)"></ui-label>
+                                    <div v-if="isTypeBlackboard(value)">
+                                        <ui-icon class="prop-icon" value="edit" tooltip="Shared Variable"></ui-icon>
+                                    </div>
+                                </div>
+
+                                <div v-if="isTypeDynamic(value)" slot="content" class="prop=content">
+                                    <ui-input v-if="isDynamicTypeString(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+                                    </ui-input>
+                                    <ui-num-input v-if="isDynamicTypeNumber(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+                                    </ui-num-input>
+                                    <ui-checkbox v-if="isDynamicTypeBoolean(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+									</ui-checkbox>
+                                    <ui-node v-if="isDynamicTypeNode(value)" class="row_item" slot="content" v-on:change="onDynamicNodeValueChange($event, key, value)" v-bind:value="getDynamicNodeUUID(value)" type="cc.Node" droppable="cc.Node" typename="Node" tabindex="-1">
+                                    </ui-node>
+                                </div>
+                                <div v-else-if="isTypeEnum(value)" slot="content" class="prop=content">
+                                    <ui-select class="row_item" v-on:change="onEnumValueChange($event, key, value)" v-bind:value="value.default">  
+                                        <option v-for="(cvalue, ckey) in getEnumVariableList(key, value)" :key="ckey" :value="cvalue">
+                                            {{ckey}}
+                                        </option>
+                                    </ui-select>
+                                </div>
+                                <div v-else-if="isTypeBlackboard(value)" slot="content" class="prop=content">
+                                    <ui-select class="row_item" v-on:change="onBlackboardValueChange($event, key, value)" v-bind:value="value.default">  
+                                        <option v-for="(item, ckey) in getBlackboardVariableList(value)" :key="ckey" :value="item.name">
+                                            {{item.name}}
+                                        </option>
+                                    </ui-select>
+                                </div>
+                                <div v-else-if="isTypeVariable(value)" slot="content" class="prop=content">
+                                    <ui-select class="row_item" v-on:change="onSharedVariableChange($event, key, value)" v-bind:value="value.default">  
+                                        <option v-for="(item, ckey) in getAllVariableList(value)" :key="ckey" :value="item.name">
+                                            {{item.name}}
+                                        </option>
+                                    </ui-select>
+                                </div>
+                                <div v-else slot="content">
+                                    <ui-input v-if="isTypeString(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+                                    </ui-input>
+                                    <ui-num-input v-if="isTypeNumber(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+                                    </ui-num-input>
+                                    <ui-checkbox v-if="isTypeBoolean(value)" class="row_item" slot="content" v-on:change="onValueChange($event, key, value)" v-bind:value="value.default">
+									</ui-checkbox>
+                                    <ui-node v-if="isTypeNode(value)" class="row_item" slot="content" v-on:change="onNodeValueChange($event, key, value)" v-bind:value="getPropertyNodeUUID(value)" type="cc.Node" droppable="cc.Node" typename="Node" tabindex="-1">
+                                    </ui-node>
+                                </div>
+                            </ui-prop>
+                        </div>
+                    </div>  
+                </ui-section>
+                <ui-section expand="" header="Delegate" v-if="!isRootNode()&&showEvent()" class="section-mt10">
+                    <div v-for="(event, key) in props.events" :key="key">    
+                        <ui-section expand="" :header="key" class="config section-mt10">
+                            <div class="">                       
+                                <div class="">
+                                    <ui-prop class="prop-node">
+                                        <div slot="label" class="row_item">
+                                            <ui-label tabindex="-1" value="Target" tooltip="Target"></ui-label>
+                                        </div>
+                                        <ui-node class="row_item" slot="content" v-bind:value="getDelegateNodeUUID(event.node)" v-on:change="onDelegateNodeChange($event, key)"
+                                        droppable="cc.Node" :tooltip="event.node.name" type="cc.Node" typename="Node" tabindex="-1">
+                                        </ui-node>
+                                    </ui-prop>
+
+                                    <ui-prop class="">
+                                        <div slot="label" class="row_item">
+                                            <ui-label tabindex="-1" value="Component" tooltip="Component"></ui-label>
+                                        </div>
+                                        <ui-select class="row_item" slot="content" v-bind:value="event.component.uuid" v-on:change="onComponentChange($event, key)"
+                                    :tooltip="event.component.name">  
+                                            <option v-for="(component, ckey) in eventData[key].components" :key="ckey" :value="component.uuid">
+                                                {{component.name}}
+                                            </option>
+                                        </ui-select>
+                                    </ui-prop>
+
+                                    <ui-prop class="">
+                                        <div slot="label" class="row_item">
+                                            <ui-label tabindex="-1" value="Method" tooltip="Method"></ui-label>
+                                        </div>                 
+                                        <ui-select class="row_item" slot="content" v-bind:value="event.method" v-on:change="onMethodChange($event, key)"
+                                        :tooltip="event.method"> 
+                                            <option v-for="(method, key) in eventData[key].methods" :key="method" :value="method">
+                                                {{method}}
+                                            </option>  
+                                        </ui-select>
+                                    </ui-prop>
+                                </div>
+                                <ui-prop class="">
+                                    <div slot="label" class="row_item">
+                                        <ui-label tabindex="-1" value="Data" tooltip="Arguments(string)"></ui-label>
+                                    </div>
+                                    <ui-input class="row_item" slot="content" v-on:change="onDataChange($event, key)" v-bind:value="event.data">
+                                    </ui-input>
+                                </ui-prop>
+                            </div>
+                        </ui-section>                
+                    </div>
+
+                </ui-section>
+            </div>
+        </div>
+    </div>
+</div>

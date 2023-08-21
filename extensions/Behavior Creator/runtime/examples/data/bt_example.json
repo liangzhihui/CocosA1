@@ -1,0 +1,242 @@
+{
+	"root": {
+		"type": "selector",
+		"config": {
+			"type": "selector",
+			"label": {
+				"events": {},
+				"title": "Enemy",
+				"group": "composite",
+				"name": "Selector",
+				"uuid": "8a33895bcRHv7EVmZOdpDNK",
+				"properties": {},
+				"order": 0
+			}
+		},
+		"elements": [],
+		"children": [
+			{
+				"type": "selector",
+				"config": {
+					"type": "selector",
+					"label": {
+						"events": {},
+						"title": "追逐玩家",
+						"group": "composite",
+						"name": "Selector",
+						"uuid": "8a33895bcRHv7EVmZOdpDNK",
+						"properties": {},
+						"order": 3
+					}
+				},
+				"elements": [
+					{
+						"type": "decorator",
+						"config": {
+							"type": "decorator",
+							"title": "中断评估",
+							"order": 1,
+							"events": {},
+							"group": "decorator",
+							"name": "Interrupter",
+							"uuid": "b7632MgaNFI7po3/OStKHXa",
+							"properties": {
+								"abortType": {
+									"tooltip": "中断类型（Self：中断自身分支；LowerPriority：中断低优先级的兄弟分支）",
+									"default": "3",
+									"TYPE": "cc.Enum",
+									"enum": {
+										"None": 0,
+										"Self": 1,
+										"LowerPriority": 2,
+										"Both": 3
+									}
+								}
+							}
+						}
+					},
+					{
+						"type": "decorator",
+						"config": {
+							"type": "decorator",
+							"title": "在视野中",
+							"order": 2,
+							"events": {},
+							"group": "decorator",
+							"name": "Conditional",
+							"uuid": "4d930L3FnhCv71nra+1BGRk",
+							"properties": {
+								"filter": {
+									"tooltip": "Filter by shared variable / 根据共享变量值进行条件过滤",
+									"default": null,
+									"TYPE": "bt.SharedBoolean"
+								}
+							},
+							"isCondition": true
+						}
+					}
+				],
+				"children": [
+					{
+						"type": "task",
+						"config": {
+							"type": "task",
+							"label": {
+								"events": {},
+								"title": "靠近",
+								"group": "task",
+								"name": "Task",
+								"uuid": "917dc/B4bBArq1QrBFaQ6gk",
+								"properties": {},
+								"order": 5
+							}
+						},
+						"elements": [
+							{
+								"type": "decorator",
+								"config": {
+									"type": "decorator",
+									"title": "不在攻击范围",
+									"order": 4,
+									"events": {},
+									"group": "decorator",
+									"name": "Conditional",
+									"uuid": "4d930L3FnhCv71nra+1BGRk",
+									"properties": {
+										"filter": {
+											"tooltip": "Filter by shared variable / 根据共享变量值进行条件过滤",
+											"default": null,
+											"TYPE": "bt.SharedBoolean"
+										}
+									},
+									"isCondition": true
+								}
+							}
+						],
+						"children": []
+					},
+					{
+						"type": "sequence",
+						"config": {
+							"type": "sequence",
+							"label": {
+								"events": {},
+								"title": "一次攻击",
+								"group": "composite",
+								"name": "Sequence",
+								"uuid": "7c895CfOwBCgKYk2gJEdRCX",
+								"properties": {},
+								"order": 6
+							}
+						},
+						"elements": [],
+						"children": [
+							{
+								"type": "task",
+								"config": {
+									"type": "task",
+									"label": {
+										"events": {},
+										"title": "攻击",
+										"group": "task",
+										"name": "Task",
+										"uuid": "917dc/B4bBArq1QrBFaQ6gk",
+										"properties": {},
+										"order": 7
+									}
+								},
+								"elements": [],
+								"children": []
+							},
+							{
+								"type": "task",
+								"config": {
+									"type": "task",
+									"label": {
+										"events": {},
+										"title": "技能CD中",
+										"group": "task",
+										"name": "Wait",
+										"uuid": "d6ba0cCO4hGyr03nOM9B5Vq",
+										"properties": {
+											"duration": {
+												"default": "cdDuration",
+												"TYPE": "bt.SharedNumber"
+											}
+										},
+										"order": 8
+									}
+								},
+								"elements": [],
+								"children": []
+							}
+						]
+					}
+				]
+			},
+			{
+				"type": "sequence",
+				"config": {
+					"type": "sequence",
+					"label": {
+						"events": {},
+						"title": "巡逻",
+						"group": "composite",
+						"name": "Sequence",
+						"uuid": "7c895CfOwBCgKYk2gJEdRCX",
+						"properties": {},
+						"order": 9
+					}
+				},
+				"elements": [],
+				"children": [
+					{
+						"type": "task",
+						"config": {
+							"type": "task",
+							"label": {
+								"events": {},
+								"title": "随机移动",
+								"group": "task",
+								"name": "Task",
+								"uuid": "917dc/B4bBArq1QrBFaQ6gk",
+								"properties": {},
+								"order": 10
+							}
+						},
+						"elements": [],
+						"children": []
+					},
+					{
+						"type": "task",
+						"config": {
+							"type": "task",
+							"label": {
+								"events": {},
+								"title": "原地休息",
+								"group": "task",
+								"name": "Wait",
+								"uuid": "d6ba0cCO4hGyr03nOM9B5Vq",
+								"properties": {
+									"duration": {
+										"default": "waitDuration",
+										"TYPE": "bt.SharedNumber"
+									}
+								},
+								"order": 11
+							}
+						},
+						"elements": [],
+						"children": []
+					}
+				]
+			}
+		]
+	},
+	"refs": [],
+	"blackboard": {
+		"variables": [],
+		"globals": []
+	},
+	"version": "1.0.0"
+}

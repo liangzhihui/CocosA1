@@ -1,0 +1,53 @@
+<!--
+ * @Author: OreoWang
+ * @Email: ihc523@163.com
+ * @Date: 2022-05-23 09:39:48
+ * @LastEditors: OreoWang
+ * @LastEditTime: 2022-06-06 15:48:17
+ * @Description: 
+-->
+
+<div id="tree_panel">
+    <div class="div_mgt8">
+        <!-- <ui-button class="yellow" @click="onSyncAllData">
+            同步
+        </ui-button> -->
+    </div>
+    <div class="div_mg8">
+        <ui-label class="title" :value="getVersion()">
+
+        </ui-label>
+        <br>
+        <ui-label class="" value="数据版本为 红色 表示版本不兼容，需要手动更新">
+
+        </ui-label>
+    </div>
+    <div class="div_line">
+
+    </div>
+    <div>
+        <div v-for="(item, key) in list" :key="key">
+            <ui-prop class="prop-script">
+                <ui-asset class="label_asset" slot="label" v-bind:value="item.uuid" droppable="cc.JsonAsset" readonly>
+                </ui-asset>
+                <ui-input class="" slot="content" v-bind:value="item.url" readonly>
+                </ui-input>
+            </ui-prop>
+            <div class="div_mg10">
+                <ui-label value="数据版本">
+
+                </ui-label>
+                
+                <ui-label :class="getVersionColor(item)" v-bind:value="item.version">
+
+                </ui-label>
+                <!-- <ui-label value="待更新">
+
+                </ui-label> -->
+            </div>
+            <div class="div_line">
+
+            </div>
+        </div>
+    </div>
+</div>

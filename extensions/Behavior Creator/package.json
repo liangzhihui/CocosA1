@@ -1,0 +1,134 @@
+{
+  "package_version": 2,
+  "version": "1.1.2",
+  "compatible_version": "1.0.2",
+  "name": "oreo-behavior-creator",
+  "description": "i18n:oreo-behavior-creator.description",
+  "author": "OreoWang",
+  "editor": ">=3.3.0",
+  "main": "./plugin/dist/main.js",
+  "panels": {
+    "default": {
+      "title": "oreo-behavior-creator -",
+      "type": "dockable",
+      "main": "./plugin/dist/panels/default/script",
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 1024,
+        "height": 600
+      }
+    },
+    "usage": {
+      "title": "oreo-behavior-creator - usage",
+      "type": "dockable",
+      "main": "./plugin/dist/panels/usage/script",
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 1024,
+        "height": 600
+      }
+    },
+    "update_tree": {
+      "title": "oreo-behavior-creator - update tree",
+      "type": "dockable",
+      "main": "./plugin/dist/panels/update_tree/script",
+      "size": {
+        "min-width": 400,
+        "min-height": 300,
+        "width": 1024,
+        "height": 600
+      }
+    }
+  },
+  "contributions": {
+    "asset-db": {
+      "mount": {
+        "path": "./runtime",
+        "readonly": true
+      }
+    },
+    "scene": {
+      "script": "./plugin/dist/scene.js"
+    },
+    "inspector": {
+      "section": {
+        "node": {
+          "BehaviorButton": "./plugin/dist/inspector/behavior.js"
+        }
+      }
+    },
+    "menu": [
+      {
+        "path": "i18n:menu.extension/oreo-behavior-creator",
+        "label": "i18n:oreo-behavior-creator.open_panel",
+        "message": "open-panel"
+      },
+      {
+        "path": "i18n:menu.extension/oreo-behavior-creator",
+        "label": "i18n:oreo-behavior-creator.update_tree_panel",
+        "message": "open_update_tree_panel"
+      }
+    ],
+    "messages": {
+      "open-panel": {
+        "methods": [
+          "open_panel"
+        ]
+      },
+      "open_update_tree_panel": {
+        "methods": [
+          "open_update_tree_panel"
+        ]
+      },
+      "edit-behavior": {
+        "methods": [
+          "edit_behavior"
+        ]
+      },
+      "panel:edit-class": {
+        "methods": [
+          "default.onEditClass"
+        ]
+      },
+      "send-to-panel": {
+        "methods": [
+          "default.hello"
+        ]
+      },
+      "btclass-registered": {
+        "methods": [
+          "btclass_registered"
+        ]
+      },
+      "get-asset-info": {
+        "methods": [
+          "getAssetInfo"
+        ]
+      },
+      "get-class-info": {
+        "methods": [
+          "getClassInfo"
+        ]
+      },
+      "save-asset-info": {
+        "methods": [
+          "onSaveAssetInfo"
+        ]
+      },
+      "close-panel": {
+        "methods": [
+          "onClosePanel"
+        ]
+      },
+      "asset-db:refresh-finish": {
+        "methods": [
+          "onAssetRefreshFinish",
+          "default.onAssetRefreshFinish"
+        ]
+      }
+    }
+  },
+  "_storeId": "40f90e61a846b39e6b528baa2e4d612f"
+}

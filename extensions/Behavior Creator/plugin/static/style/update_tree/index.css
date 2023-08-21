@@ -1,0 +1,47 @@
+:host {
+    /* display: flex; */
+    overflow-y: scroll;
+}
+/* #tree_panel_app {
+    overflow-y: scroll;
+}
+#tree_panel {
+    overflow-y: scroll;
+} */
+.title {
+    font-size: large;
+}
+.version_error {
+    color: red;
+}
+.version_waring {
+    color: orange;
+}
+
+.div_mg8 {
+    margin: 10px 8px;
+}
+.div_mgt8 {
+    margin: 5px 8px 0px;
+}
+.div_line {
+    border-bottom: solid 1px rgb(155, 155, 106);
+    margin: 0px 0px 0px 8px;
+}
+.div_mg10 {
+    margin: 0px 10px;
+}
+.prop-script {
+    padding-top: 5px;
+    margin-top: 2px;
+    align-items: center;
+    /* border-top: dashed 1px rgba(128, 128, 128, 0.2); */
+}
+.row_item {
+    margin: 5px 8px;
+}
+.label_asset {
+    margin: 5px 8px;
+    min-width: 150px;
+    width: 100%;
+}

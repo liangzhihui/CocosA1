@@ -1,0 +1,94 @@
+<!--
+ * @Author: OreoWang
+ * @Email: ihc523@163.com
+ * @Date: 2022-04-12 10:26:27
+ * @LastEditors: OreoWang
+ * @LastEditTime: 2022-04-12 18:37:17
+ * @Description: 
+-->
+
+<div id="props-root">
+    <div class="settings" >
+        <div class="content">
+            <div class="wrap">
+    			<div class="">
+					<ui-section expand="" :header="getEditingHeader()">
+						<ui-prop class="">
+							<div slot="label" class="row_item prop-label-content">
+								<ui-label tabindex="-1" value="Name" tooltip="Name of the variable"></ui-label>
+								<ui-icon v-if="isEditing" class="prop-icon" value="lock"></ui-icon>
+							</div>
+							<ui-input :readonly="isEditing" class="row_item" slot="content" :value="props.name" v-on:change="onChangeName">
+							</ui-input>
+						</ui-prop>                       
+						<ui-prop class="">
+							<div slot="label" class="row_item prop-label-content">
+								<ui-label tabindex="-1" value="Type" tooltip="Type of the variable"></ui-label>
+								<ui-icon v-if="isEditing" class="prop-icon" value="lock"></ui-icon>
+							</div>
+							<ui-select :readonly="isEditing" class="row_item" slot="content" v-on:change="onSelectType($event)" v-bind:value="props.type">  
+								<template v-for="(ctype, ckey) in getBlackboardAllType()">
+									<option :value=ctype>{{ctype}}</option>
+								</template>
+							</ui-select>
+						</ui-prop>
+						<ui-prop class="">
+							<div slot="label" class="row_item">
+								<ui-label tabindex="-1" value="Description" tooltip="Description of the variable"></ui-label>
+							</div>
+							<ui-textarea class="row_item" slot="content" placeholder="Description of the variable" :value="props.tooltip" v-on:change="onChangeDescription">
+							</ui-textarea>
+						</ui-prop>  
+						<div v-if="isEditing">
+							<ui-button class="btn-apply" @confirm="onApplyEditing()">apply</ui-button>			<ui-button class="btn-cancel" @confirm="onCancelEditing()">cancel</ui-button>
+						</div>
+						<div v-else>
+							<ui-button class="btn-create" @confirm="onAddVariable()">create</ui-button>
+						</div>
+
+						<div class="line"></div>
+
+					</ui-section>
+					
+					
+					<ui-section class="section-header"  expand="" header="Shared Variables">
+					<!-- <div class="blackboard-content"> -->
+						<template v-for="(item, key) in getAllVariable()">
+                            <ui-prop class="">
+                                <div slot="label" class="row_item">
+                                    <ui-label tabindex="-1" :value="item.name" :tooltip="getVariableTooltip(item)"></ui-label>
+                                </div>
+                        
+								<div slot="content" class="prop-content">
+									<ui-input v-if="isTypeString(item.value)" class="row_item prop-mr2" v-on:change="onValueChange($event, key, item)" v-bind:value="item.value.default">
+									</ui-input>
+
+									<ui-num-input v-if="isTypeNumber(item.value)" class="row_item prop-mr2" slot="content" v-on:change="onValueChange($event, key, item)" v-bind:value="item.value.default">
+									</ui-num-input>
+										
+									<ui-checkbox v-if="isTypeBoolean(item.value)" class="row_item prop-mr2" slot="content" v-on:change="onValueChange($event, key, item)" v-bind:value="item.value.default">
+									</ui-checkbox>										
+									
+									<ui-node v-if="isTypeNode(item.value)" class="row_item prop-mr2" slot="content" v-on:change="onNodeValueChange($event, key, item)" v-bind:value="getSharedNodeUUID(item.value)" type="cc.Node" droppable="cc.Node" typename="Node" tabindex="-1">
+									</ui-node>
+
+									<span v-if="isTypeBoolean(item.value)" class="prop-span"></span>
+									<!-- <div v-if="isTypeBoolean(item.value)">
+									</div> -->
+	
+									<ui-button class="transparent prop-button" tooltip="Edit" tabindex="-1" @confirm="onEditVariable(item)">
+										<ui-icon class="prop-icon" value="edit"></ui-icon>
+									</ui-button>
+									<ui-button class="transparent prop-button" tooltip="Delete" tabindex="-1" @confirm="onDelVariable(item)">
+										<ui-icon class="prop-icon" value="del"></ui-icon>
+									</ui-button>
+								</div>
+                            </ui-prop>
+                        </template>
+					<!-- </div> -->
+					</ui-section>
+				</div>
+            </div>
+        </div>
+    </div>
+</div>

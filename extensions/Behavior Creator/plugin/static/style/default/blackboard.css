@@ -1,0 +1,37 @@
+.blackboard {
+  margin: 0px 10px;
+}
+
+.blackboard-content {
+  margin: 0px 10px;
+}
+
+.section-header {
+  margin-top: 10px;
+}
+
+.btn-create {
+  width: 80%; 
+  line-height: 22px;
+  margin: 5px 10% 5px; 
+  /* border: dashed 1px */
+}
+
+.btn-apply {
+  width: 30%; 
+  line-height: 22px;
+  margin: 5px 5% 5px 15%; 
+  /* border: dashed 1px */
+}
+
+.btn-cancel {
+  width: 30%; 
+  line-height: 22px;
+  margin: 5px 12% 5px 5%; 
+  /* border: dashed 1px */
+}
+
+.line {
+  margin: 5px 0px;
+  border-bottom: solid 2px rgba(128, 128, 128, 0.5);
+}
