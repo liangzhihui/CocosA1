@@ -13,6 +13,9 @@ export class EntityAttribute {
     /** 武器旋转速度（度/每秒） */
     @property
     weaponAngleSpeed: number = 0;
+    /** 武器最大旋转速度（度/每秒） */
+    @property
+    weaponMaxAngleSpeed: number = 0;
     /** 武器击退效果 */
     @property
     weaponBeatback: number = 0;

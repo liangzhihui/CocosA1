@@ -1,8 +1,9 @@
-import { Collider2D, Component, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, PolygonCollider2D, log } from "cc";
-import { setLength } from "../../../../utils/vec2Util";
+import { Collider2D, Component, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, log } from "cc";
+import { limit, setLength } from "../../../../utils/vec2Util";
 import { EntityWeapon } from "./EntityWeapon";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 import { EntityAttribute } from "../EntityAttribute";
+import { rangeMap } from "../../../../utils/utils";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -26,16 +27,16 @@ export class Entity extends Component {
 
     @property
     public isRole: boolean = false;
+
     @property
     private _entityId: number = 0;
     @property
-    get entityId() {
-        return this._entityId;
-    }
-    set entityId(value: number) {
-        this._entityId = value;
-    }
+    get entityId() { return this._entityId; }
+    set entityId(value: number) { this._entityId = value; }
 
+    private _velocity: Vec2 = new Vec2();
+    private _accelerate: Vec2 = new Vec2();
+    private _targetPos: Vec2 = new Vec2();
     private _tempPos: Vec2 = new Vec2();
 
     protected onLoad(): void {
@@ -63,7 +64,8 @@ export class Entity extends Component {
         this.weapon = weapon
 
         if (weapon) {
-            weapon.rotator.speed = this.attr.weaponAngleSpeed;
+            weapon.rotator.setSpeed(this.attr.weaponAngleSpeed);
+            weapon.rotator.setMaxSpeed(this.attr.weaponMaxAngleSpeed);
             weapon.setRadius(this.getBodyRadius() + linkLength)
         }
     }
@@ -78,18 +80,11 @@ export class Entity extends Component {
 
     protected update(dt: number): void {
         if (this.isRole) {
-            let x = A1.input.getAxis("Horizontal");
-            let y = A1.input.getAxis("Vertical");
-            v2.set(x, y);
-            setLength(v2, v2, this.attr.maxMoveSpeed);
-            this.rigidBody.linearVelocity = v2;
-
-            let scalex = this.body.getScale(v3).x
-            if (v2.x > 0)
-                scalex = Math.abs(scalex);
-            else if (v2.x < 0)
-                scalex = -Math.abs(scalex);
-            this.body.setScale(scalex, 1, 1)
+            this.updateRoleControl();
+            this.updateBody();
+        }
+        else {
+            this.updateSteerBehavior(dt);
         }
 
         let weapon = this.weapon;
@@ -98,6 +93,48 @@ export class Entity extends Component {
             weapon.node.setPosition(this._tempPos.x, this._tempPos.y);
         }
     }
+
+    private updateBody() {
+        let scalex = this.body.getScale(v3).x;
+        let v = this._velocity;
+        if (v.x > 0)
+            scalex = Math.abs(scalex);
+        else if (v.x < 0)
+            scalex = -Math.abs(scalex);
+        this.body.setScale(scalex, 1, 1);
+    }
+
+    private updateRoleControl() {
+        let x = A1.input.getAxis("Horizontal");
+        let y = A1.input.getAxis("Vertical");
+        v2.set(x, y);
+        setLength(v2, v2, this.attr.maxMoveSpeed);
+        this._velocity.set(v2);
+        this.rigidBody.linearVelocity = v2;
+    }
+
+    private updateSteerBehavior(dt: number) {
+
+    }
+
+    /** 寻找目标位置 */
+    // seek(target: Vec2, outForce: Vec2): Vec2 {
+    //     this._getPosition(this._tempPos);
+    //     let desire = Vec2.subtract(v2, target, this._tempPos);
+    //     let distance = desire.length();
+    //     let maxSpeed = this.attr.maxMoveSpeed
+    //     let speed = maxSpeed;
+    //     const closeDistance = this.closeDistance;
+    //     if (distance < closeDistance) {
+    //         speed = rangeMap(distance, 0, closeDistance, 0, maxSpeed);
+    //     }
+    //     desire.normalize();
+    //     desire.multiplyScalar(speed);
+    //     let steer = Vec2.subtract(outForce, desire, this._velocity);
+    //     limit(steer, steer, this.maxForce);
+    //     return steer
+    // }
+
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         let otherGroup = otherCollider.group;

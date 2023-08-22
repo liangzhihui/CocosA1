@@ -379,7 +379,7 @@
     "__type__": "EntityAttribute",
     "hp": 100,
     "maxMoveSpeed": 10,
-    "weaponAngleSpeed": 440,
+    "weaponAngleSpeed": 300,
     "weaponBeatback": 24
   },
   {

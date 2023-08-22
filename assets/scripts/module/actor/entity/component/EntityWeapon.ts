@@ -46,7 +46,7 @@ export class EntityWeapon extends Component {
             otherGroup == PhysicGroupIndex.Weapon ||
             otherGroup == PhysicGroupIndex.Actor) {
             if (this.rotator && !this._limitReverse) {
-                this.rotator.reverseDirection();
+                this.rotator.reverseDirection(this.rotator.maxSpeed);
                 this.setLimitReverse();
             }
         }

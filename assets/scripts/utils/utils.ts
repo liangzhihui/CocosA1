@@ -66,7 +66,6 @@ export function getActive(target: any, hiddenKey: string = "default")
     return !keys[hiddenKey];
 }
 
-
 export function isStartCalled(comp: Component): boolean {
     const IsStartCalled = CCObject.Flags.IsStartCalled;
     return (comp._objFlags & IsStartCalled) == IsStartCalled;

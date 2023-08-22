@@ -517,7 +517,7 @@
       "__id__": 20
     },
     "speed": 0,
-    "direction": 1,
+    "maxSpeed": 700,
     "_id": ""
   },
   {
