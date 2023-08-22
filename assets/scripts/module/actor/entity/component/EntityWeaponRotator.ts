@@ -12,7 +12,7 @@ export class EntityWeaponRotator extends Component {
     public maxSpeed: number = 700;
 
     /** 超过期望旋转速度后的阻力 */
-    public maxForce: number = 3;
+    public maxForce: number = 4.4;
 
     /** 期望旋转速度 */
     public expectSpeed: number = 0;

@@ -8,9 +8,13 @@ export class GameElement extends Component {
     public sceneCamera: Camera = null;
 
     @property(Node)
+    public sceneLayer: Node = null;
+
+    @property(Node)
     public actorLayer: Node = null;
 
     @property(Prefab)
     public rolePrefab: Prefab = null;
+
 }
 

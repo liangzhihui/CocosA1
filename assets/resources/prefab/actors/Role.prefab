@@ -380,6 +380,7 @@
     "hp": 100,
     "maxMoveSpeed": 10,
     "weaponAngleSpeed": 300,
+    "weaponMaxAngleSpeed": 900,
     "weaponBeatback": 24
   },
   {

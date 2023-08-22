@@ -1,4 +1,4 @@
-import { Component, _decorator } from "cc";
+import { Component, _decorator, Node } from "cc";
 const { ccclass, property } = _decorator;
 import "../base";
 import { InputManager } from "../input/InputManager";
@@ -14,12 +14,17 @@ export class GameStart extends Component {
     onLoad() {
         A1.element = this.element;
 
-        let inputManager = this.addComponent(InputManager);
-        A1.input = inputManager.inputState;
+        let gameControl = new Node("GameControl");
+        let inputManager = gameControl.addComponent(InputManager);
 
-        let actorManager = this.addComponent(ActorManager);
+        let actorManager = gameControl.addComponent(ActorManager);
         actorManager.rolePrefab = this.element.rolePrefab;
-        actorManager.layer = this.element.actorLayer;
+        actorManager.actorLayer = this.element.actorLayer;
+        actorManager.sceneLayer = this.element.sceneLayer;
+
+        gameControl.setParent(this.node);
+
+        A1.input = inputManager.inputState;
         A1.actorManager = actorManager;
     }
 }

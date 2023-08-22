@@ -1,5 +1,5 @@
 import { Collider2D, Component, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, log } from "cc";
-import { limit, setLength } from "../../../../utils/vec2Util";
+import { limit, setLength, zero } from "../../../../utils/vec2Util";
 import { EntityWeapon } from "./EntityWeapon";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 import { EntityAttribute } from "../EntityAttribute";
@@ -8,6 +8,9 @@ const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
 const v2_2 = new Vec2();
+const tempPos = new Vec2();
+const tempForce = new Vec2();
+const tempTarget = new Vec2();
 const v3 = new Vec3();
 
 @ccclass("Entity")
@@ -24,6 +27,8 @@ export class Entity extends Component {
     attr: EntityAttribute = new EntityAttribute();
 
     public weapon: EntityWeapon = null;
+    public maxForce: number = 20;
+    public closeDistance: number = 50;
 
     @property
     public isRole: boolean = false;
@@ -34,10 +39,16 @@ export class Entity extends Component {
     get entityId() { return this._entityId; }
     set entityId(value: number) { this._entityId = value; }
 
+    @property
+    public get findRole() { return false; }
+    public set findRole(value: boolean) {
+        this.setTargetNode(A1.actorManager.model.role.node);
+    }
+
     private _velocity: Vec2 = new Vec2();
     private _accelerate: Vec2 = new Vec2();
-    private _targetPos: Vec2 = new Vec2();
-    private _tempPos: Vec2 = new Vec2();
+    private _targetNode: Node = null;
+    private _target: Vec2 = new Vec2();
 
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
@@ -45,14 +56,16 @@ export class Entity extends Component {
         this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
     }
 
-    private _getPosition(out: Vec2, node: Node = this.node) {
+    public getPosition(out: Vec2, node: Node = this.node) {
         node.getPosition(v3);
         out.set(v3.x, v3.y);
+        return out;
     }
 
-    private _getWorldPosition(out: Vec2, node: Node = this.node) {
+    public getWorldPosition(out: Vec2, node: Node = this.node) {
         node.getWorldPosition(v3);
         out.set(v3.x, v3.y);
+        return out;
     }
 
     public setWeapon(weapon: EntityWeapon, linkLength: number) {
@@ -84,13 +97,16 @@ export class Entity extends Component {
             this.updateBody();
         }
         else {
-            this.updateSteerBehavior(dt);
+            if (this._targetNode != null) {
+                this.getWorldPosition(this._target, this._targetNode)
+                this.updateSteerBehavior(dt);
+            }
         }
 
         let weapon = this.weapon;
         if (weapon) {
-            this._getPosition(this._tempPos)
-            weapon.node.setPosition(this._tempPos.x, this._tempPos.y);
+            this.getPosition(tempPos)
+            weapon.node.setPosition(tempPos.x, tempPos.y);
         }
     }
 
@@ -114,27 +130,67 @@ export class Entity extends Component {
     }
 
     private updateSteerBehavior(dt: number) {
+        this._velocity.set(this.rigidBody.linearVelocity);
 
+        let steer = this.arrive(this._target, this.closeDistance, tempForce);
+        this.applyForce(steer);
+
+        const obstacles = A1.actorManager.model.obstacles;
+        obstacles.forEach(obstacle => {
+            this.getWorldPosition(tempTarget, obstacle);
+            let steer = this.flee(tempTarget, 150, tempForce);
+            this.applyForce(steer);
+        });
+
+        limit(this._accelerate, this._accelerate, this.maxForce);
+
+        let v = this._velocity;
+        let a = this._accelerate;
+        v.add(a);
+
+        zero(a);
+
+        this.rigidBody.linearVelocity = v;
     }
 
-    /** 寻找目标位置 */
-    // seek(target: Vec2, outForce: Vec2): Vec2 {
-    //     this._getPosition(this._tempPos);
-    //     let desire = Vec2.subtract(v2, target, this._tempPos);
-    //     let distance = desire.length();
-    //     let maxSpeed = this.attr.maxMoveSpeed
-    //     let speed = maxSpeed;
-    //     const closeDistance = this.closeDistance;
-    //     if (distance < closeDistance) {
-    //         speed = rangeMap(distance, 0, closeDistance, 0, maxSpeed);
-    //     }
-    //     desire.normalize();
-    //     desire.multiplyScalar(speed);
-    //     let steer = Vec2.subtract(outForce, desire, this._velocity);
-    //     limit(steer, steer, this.maxForce);
-    //     return steer
-    // }
+    public applyForce(force: Vec2) {
+        this._accelerate.add(force);
+    }
 
+    /** 到达目标位置 */
+    public arrive(target: Vec2, closeDistance: number, outForce: Vec2) {
+        this.getWorldPosition(tempPos);
+        let desire = Vec2.subtract(v2, target, tempPos);
+        let distance = desire.length();
+        let maxSpeed = this.attr.maxMoveSpeed
+        let speed = maxSpeed;
+        if (distance < closeDistance) {
+            speed = rangeMap(distance, 0, closeDistance, 0, maxSpeed);
+        }
+        desire.normalize();
+        desire.multiplyScalar(speed);
+        return Vec2.subtract(outForce, desire, this._velocity);
+    }
+
+    public flee(target: Vec2, closeDistance: number, outForce: Vec2) {
+        this.getWorldPosition(tempPos);
+        let desire = Vec2.subtract(v2, tempPos, target);
+        let distance = desire.length();
+        let maxSpeed = this.attr.maxMoveSpeed
+        if (distance < closeDistance) {
+            let speed = rangeMap(distance, 0, closeDistance, maxSpeed, 0);
+            desire.normalize();
+            desire.multiplyScalar(speed);
+            return Vec2.subtract(outForce, desire, this._velocity);
+        }
+        else {
+            return zero(outForce);
+        }
+    }
+
+    public setTargetNode(node: Node) {
+        this._targetNode = node;
+    }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         let otherGroup = otherCollider.group;
@@ -144,8 +200,8 @@ export class Entity extends Component {
                 if (!actor || actor.node == selfCollider.node)
                     return;
 
-                this._getWorldPosition(v2, selfCollider.node);
-                this._getWorldPosition(v2_2, actor.node);
+                this.getWorldPosition(v2, selfCollider.node);
+                this.getWorldPosition(v2_2, actor.node);
                 Vec2.subtract(v2, v2, v2_2);
                 setLength(v2, v2, actor.attr.weaponBeatback);
                 log(`Monster is hit began. impulse x:${v2.x} y:${v2.y}`);

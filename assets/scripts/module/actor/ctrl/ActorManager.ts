@@ -2,6 +2,8 @@ import { Component, Prefab, _decorator, instantiate, Node, resources, error, Col
 import { Entity } from "../entity/component/Entity";
 import { ActorModel } from "../model/ActorModel";
 import { EntityWeapon } from "../entity/component/EntityWeapon";
+import { PolygonCollider2D } from "cc";
+import { PhysicGroupIndex } from "../../../const/PhysicGroupIndex";
 
 const { ccclass, property } = _decorator
 
@@ -9,7 +11,10 @@ const { ccclass, property } = _decorator
 export class ActorManager extends Component {
 
     @property(Node)
-    layer: Node = null;
+    actorLayer: Node = null;
+
+    @property(Node)
+    sceneLayer: Node = null;
 
     @property(Prefab)
     rolePrefab: Prefab = null;
@@ -18,6 +23,17 @@ export class ActorManager extends Component {
 
     protected onLoad(): void {
         this.model = new ActorModel();
+        this.initSceneObstacles();
+    }
+
+    public initSceneObstacles() {
+        let colliders = this.sceneLayer.getComponentsInChildren(PolygonCollider2D)
+        let obstacles = this.model.obstacles;
+        colliders.forEach(collider => {
+            if (collider.group == PhysicGroupIndex.SceneObstacle) {
+                obstacles.push(collider.node);
+            }
+        });
     }
 
     public createRole() {
@@ -26,7 +42,7 @@ export class ActorManager extends Component {
         let role = roleNode.getComponent(Entity);
         role.entityId = roleId;
         role.name = "Role_" + roleId;
-        role.node.setParent(this.layer);
+        role.node.setParent(this.actorLayer);
         this.model.role = role;
 
         resources.load("prefab/weapons/ActorWeapon", Prefab, (err, asset) => {
@@ -35,7 +51,7 @@ export class ActorManager extends Component {
                 return;
             }
             let weaponNode = instantiate(asset);
-            this.layer.addChild(weaponNode);
+            this.actorLayer.addChild(weaponNode);
 
             let weapon = weaponNode.getComponent(EntityWeapon);
             this.model.role.setWeapon(weapon, 20);
