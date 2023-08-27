@@ -21,10 +21,12 @@ export class GameStart extends Component {
         actorManager.rolePrefab = this.element.rolePrefab;
         actorManager.actorLayer = this.element.actorLayer;
         actorManager.sceneLayer = this.element.sceneLayer;
-
         gameControl.setParent(this.node);
+
+        let mainui = this.element.mainui
 
         A1.input = inputManager.inputState;
         A1.actorManager = actorManager;
+        A1.mainui = mainui;
     }
 }

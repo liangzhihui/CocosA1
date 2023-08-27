@@ -4,6 +4,7 @@ import { ActorModel } from "../model/ActorModel";
 import { EntityWeapon } from "../entity/component/EntityWeapon";
 import { PolygonCollider2D } from "cc";
 import { PhysicGroupIndex } from "../../../const/PhysicGroupIndex";
+import { removeFromParent } from "../../../utils/ccUtil";
 
 const { ccclass, property } = _decorator
 
@@ -70,7 +71,25 @@ export class ActorManager extends Component {
         });
     }
 
-    protected start(): void {
-        this.createRole();
+    public removeAllActors() {
+        let model = this.model;
+        model.actors.forEach(actor => {
+            let weapon: EntityWeapon;
+            if (weapon = actor.weapon) {
+                actor.weapon = null;
+                removeFromParent(weapon.node, true);
+            }
+            removeFromParent(actor.node, true);
+        });
+        model.actors = [];
+
+        let role = this.model.role
+        let weapon: EntityWeapon;
+        if (weapon = role.weapon) {
+            role.weapon = null;
+            removeFromParent(weapon.node, true);
+        }
+        removeFromParent(role.node, true);
+        this.model.role = null;
     }
 }

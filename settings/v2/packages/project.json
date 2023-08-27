@@ -24,13 +24,23 @@
       {
         "index": 3,
         "name": "WEAPON"
+      },
+      {
+        "index": 4,
+        "name": "SCENE_OBJ"
+      },
+      {
+        "index": 5,
+        "name": "BULLET"
       }
     ],
     "collisionMatrix": {
       "0": 1,
       "1": 12,
-      "2": 14,
-      "3": 14
+      "2": 62,
+      "3": 14,
+      "4": 4,
+      "5": 4
     }
   },
   "general": {

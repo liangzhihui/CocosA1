@@ -4,6 +4,7 @@ import { EntityWeapon } from "./EntityWeapon";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 import { EntityAttribute } from "../EntityAttribute";
 import { rangeMap } from "../../../../utils/utils";
+import { removeFromParent } from "../../../../utils/ccUtil";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -71,7 +72,7 @@ export class Entity extends Component {
     public setWeapon(weapon: EntityWeapon, linkLength: number) {
         let preWeapon = this.weapon;
         if (preWeapon) {
-            preWeapon.destroy();
+            removeFromParent(preWeapon.node, true);
         }
 
         this.weapon = weapon

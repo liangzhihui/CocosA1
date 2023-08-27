@@ -1,5 +1,6 @@
 import { _decorator, Node } from "cc";
 import { Entity } from "../entity/component/Entity";
+import { EntityWeapon } from "../entity/component/EntityWeapon";
 
 const { ccclass } = _decorator
 
@@ -14,4 +15,6 @@ export class ActorModel {
     public generateId() {
         return this._nextId++;
     }
+
+
 }
