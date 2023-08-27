@@ -55,6 +55,7 @@ export class Entity extends Component {
         this._bodyTrans = this.body.getComponent(UITransform);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
         this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
+        this.attr.on(EntityAttribute.EventType.died, this._onDied, this);
     }
 
     public getPosition(out: Vec2, node: Node = this.node) {
@@ -201,6 +202,7 @@ export class Entity extends Component {
                 if (!actor || actor.node == selfCollider.node)
                     return;
 
+                actor.attr.decHp();
                 this.getWorldPosition(v2, selfCollider.node);
                 this.getWorldPosition(v2_2, actor.node);
                 Vec2.subtract(v2, v2, v2_2);
@@ -218,5 +220,9 @@ export class Entity extends Component {
                 log("Monster is hit ended.");
             }
         }
+    }
+
+    private _onDied() {
+
     }
 }

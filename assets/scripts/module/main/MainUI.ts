@@ -3,6 +3,7 @@ import { HpView } from './HpView';
 import { ComboView } from './ComboView';
 import { ResultUI } from '../result/ResultUI';
 import { StartUI } from './StartUI';
+import { Joystck } from '../../input/Joystck';
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
@@ -19,6 +20,9 @@ export class MainUI extends Component {
     @property(ResultUI)
     resultUI: ResultUI = null;
 
+    @property(Joystck)
+    stick: Joystck = null;
+
     start(): void {
         this.openView(this.startUI);    
     }
@@ -26,6 +30,7 @@ export class MainUI extends Component {
     startGame() {
         A1.actorManager.createRole();
         this.closeView(this.startUI);
+        this.openView(this.stick);
         this.openView(this.hp);
     }
 
@@ -38,7 +43,9 @@ export class MainUI extends Component {
     }
 
     finishLevel(win: boolean) {
+        this.closeView(this.stick);
         this.openView(this.resultUI);
+        this.resultUI.updateView(win);
     }
 
     openView(view: Component) {

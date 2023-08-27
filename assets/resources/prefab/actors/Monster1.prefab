@@ -372,9 +372,11 @@
   },
   {
     "__type__": "EntityAttribute",
-    "hp": 100,
+    "hp": 5,
     "maxMoveSpeed": 10,
-    "weaponAngleSpeed": 440
+    "weaponAngleSpeed": 440,
+    "weaponMaxAngleSpeed": 0,
+    "weaponBeatback": 0
   },
   {
     "__type__": "cc.PrefabInfo",

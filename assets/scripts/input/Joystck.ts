@@ -41,6 +41,10 @@ export class Joystck extends Component {
         this.touchNode.on(NodeEventType.TOUCH_END, this._onTouchEnd, this);
     }
 
+    protected onDisable(): void {
+        this._onTouchEnd(null);
+    }
+
     private _onTouchStart(evt: EventTouch) {
         this._setDir(Vec2.ZERO);
         evt.getUILocation(v2);
