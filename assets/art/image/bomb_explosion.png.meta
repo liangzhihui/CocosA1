@@ -31,12 +31,104 @@
         ".json"
       ],
       "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "646540ac-a4be-4788-9919-46268655d07b@f9941",
+      "displayName": "bomb_explosion",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 1,
+        "offsetY": -0.5,
+        "trimX": 3,
+        "trimY": 6,
+        "width": 176,
+        "height": 169,
+        "rawWidth": 180,
+        "rawHeight": 180,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -88,
+            -84.5,
+            0,
+            88,
+            -84.5,
+            0,
+            -88,
+            84.5,
+            0,
+            88,
+            84.5,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            3,
+            174,
+            179,
+            174,
+            3,
+            5,
+            179,
+            5
+          ],
+          "nuv": [
+            0.016666666666666666,
+            0.027777777777777776,
+            0.9944444444444445,
+            0.027777777777777776,
+            0.016666666666666666,
+            0.9666666666666667,
+            0.9944444444444445,
+            0.9666666666666667
+          ],
+          "minPos": [
+            -88,
+            -84.5,
+            0
+          ],
+          "maxPos": [
+            88,
+            84.5,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "646540ac-a4be-4788-9919-46268655d07b@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
     }
   },
   "userData": {
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "type": "texture",
-    "redirect": "646540ac-a4be-4788-9919-46268655d07b@6c48a"
+    "type": "sprite-frame",
+    "redirect": "646540ac-a4be-4788-9919-46268655d07b@f9941"
   }
 }

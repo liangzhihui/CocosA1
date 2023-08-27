@@ -31,12 +31,104 @@
         ".json"
       ],
       "subMetas": {}
+    },
+    "f9941": {
+      "importer": "sprite-frame",
+      "uuid": "257c8329-57f2-4b30-89dd-56437a4c3d35@f9941",
+      "displayName": "treasure",
+      "id": "f9941",
+      "name": "spriteFrame",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 4,
+        "offsetY": 2,
+        "trimX": 11,
+        "trimY": 2,
+        "width": 112,
+        "height": 92,
+        "rawWidth": 126,
+        "rawHeight": 100,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [
+            -56,
+            -46,
+            0,
+            56,
+            -46,
+            0,
+            -56,
+            46,
+            0,
+            56,
+            46,
+            0
+          ],
+          "indexes": [
+            0,
+            1,
+            2,
+            2,
+            1,
+            3
+          ],
+          "uv": [
+            11,
+            98,
+            123,
+            98,
+            11,
+            6,
+            123,
+            6
+          ],
+          "nuv": [
+            0.0873015873015873,
+            0.06,
+            0.9761904761904762,
+            0.06,
+            0.0873015873015873,
+            0.98,
+            0.9761904761904762,
+            0.98
+          ],
+          "minPos": [
+            -56,
+            -46,
+            0
+          ],
+          "maxPos": [
+            56,
+            46,
+            0
+          ]
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "257c8329-57f2-4b30-89dd-56437a4c3d35@6c48a",
+        "atlasUuid": ""
+      },
+      "ver": "1.0.12",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
     }
   },
   "userData": {
     "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
-    "type": "texture",
-    "redirect": "257c8329-57f2-4b30-89dd-56437a4c3d35@6c48a"
+    "type": "sprite-frame",
+    "redirect": "257c8329-57f2-4b30-89dd-56437a4c3d35@f9941"
   }
 }
