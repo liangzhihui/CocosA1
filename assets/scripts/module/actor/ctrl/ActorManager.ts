@@ -5,8 +5,11 @@ import { EntityWeapon } from "../entity/component/EntityWeapon";
 import { PolygonCollider2D } from "cc";
 import { PhysicGroupIndex } from "../../../const/PhysicGroupIndex";
 import { removeFromParent } from "../../../utils/ccUtil";
+import { EntityBornData } from "../entity/EntityBornData";
 
 const { ccclass, property } = _decorator
+const ActorResPrefix = "prefab/actors/";
+const WeaponResPrefix = "prefab/weapons/";
 
 @ccclass("ActorManager")
 export class ActorManager extends Component {
@@ -37,25 +40,36 @@ export class ActorManager extends Component {
         });
     }
 
-    public createRole() {
-        let roleNode = instantiate(this.rolePrefab);
-        let roleId = this.model.generateId()
-        let role = roleNode.getComponent(Entity);
-        role.entityId = roleId;
-        role.name = "Role_" + roleId;
-        role.node.setParent(this.actorLayer);
-        this.model.role = role;
+    public createActor(bornData: EntityBornData) {
+        let arr: Promise<Prefab>[] = [];
+        let actorResUrl = ActorResPrefix + bornData.actorResUrl;
+        arr.push(A1.resManager.aload(actorResUrl));
 
-        resources.load("prefab/weapons/ActorWeapon", Prefab, (err, asset) => {
-            if (err) {
-                error(err);
-                return;
+        let weaponResUrl = WeaponResPrefix + bornData.weaponResUrl;
+        if (weaponResUrl) {
+            arr.push(A1.resManager.aload(weaponResUrl));
+        }
+
+        Promise.all(arr).then(([actorPrefab, weaponPrefab]) => {
+            let roleNode = instantiate(actorPrefab);
+            let roleId = this.model.generateId()
+            let role = roleNode.getComponent(Entity);
+            role.entityId = roleId;
+            role.name = "Role_" + roleId;
+            role.side = bornData.side;
+            role.attr.hp = bornData.hp;
+            role.forward = bornData.forward;
+            role.node.setPosition(bornData.pos.x, bornData.pos.y);
+            role.node.setParent(this.actorLayer);
+            this.model.role = role;
+
+            if (weaponPrefab) {
+                let weaponNode = instantiate(weaponPrefab);
+                this.actorLayer.addChild(weaponNode);
+
+                let weapon = weaponNode.getComponent(EntityWeapon);
+                this.model.role.setWeapon(weapon, 20);
             }
-            let weaponNode = instantiate(asset);
-            this.actorLayer.addChild(weaponNode);
-
-            let weapon = weaponNode.getComponent(EntityWeapon);
-            this.model.role.setWeapon(weapon, 20);
         });
     }
 

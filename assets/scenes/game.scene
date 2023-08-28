@@ -181,6 +181,7 @@
       "__uuid__": "620646dd-6cfe-4726-b52c-a57c34849de3",
       "__expectedType__": "cc.Prefab"
     },
+    "monsters": [],
     "mainui": null,
     "_id": "2dwhSi9uhCp5uY7eznT4q5"
   },
@@ -813,7 +814,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 462.73809523809524,
+    "_orthoHeight": 470.21276595744683,
     "_near": 1,
     "_far": 2000,
     "_color": {

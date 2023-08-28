@@ -5,6 +5,7 @@ import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 import { EntityAttribute } from "../EntityAttribute";
 import { rangeMap } from "../../../../utils/utils";
 import { removeFromParent } from "../../../../utils/ccUtil";
+import { EntityForward, EntitySide } from "../../../../const/EntityConst";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -40,6 +41,17 @@ export class Entity extends Component {
     get entityId() { return this._entityId; }
     set entityId(value: number) { this._entityId = value; }
 
+    private _foward: EntityForward = EntityForward.Left;
+    get forward() { return this._foward; }
+    set forward(value) { 
+        this._foward = value;
+        this.updateScaleWithForward();
+    }
+
+    private _side: EntitySide = 0;
+    get side() { return this._side; }
+    set side(value) { this._side = value; }
+
     @property
     public get findRole() { return false; }
     public set findRole(value: boolean) {
@@ -56,6 +68,10 @@ export class Entity extends Component {
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
         this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
         this.attr.on(EntityAttribute.EventType.died, this._onDied, this);
+    }
+
+    protected start(): void {
+        this.updateScaleWithForward();
     }
 
     public getPosition(out: Vec2, node: Node = this.node) {
@@ -96,7 +112,7 @@ export class Entity extends Component {
     protected update(dt: number): void {
         if (this.isRole) {
             this.updateRoleControl();
-            this.updateBody();
+            this.updateForward();
         }
         else {
             if (this._targetNode != null) {
@@ -112,13 +128,21 @@ export class Entity extends Component {
         }
     }
 
-    private updateBody() {
-        let scalex = this.body.getScale(v3).x;
+    private updateForward() {
         let v = this._velocity;
         if (v.x > 0)
-            scalex = Math.abs(scalex);
+            this._foward = EntityForward.Right;
         else if (v.x < 0)
-            scalex = -Math.abs(scalex);
+            this._foward = EntityForward.Left;
+
+        this.updateScaleWithForward();
+    }
+
+    private updateScaleWithForward() {
+        let scalex = Math.abs(this.body.getScale(v3).x);
+        if (this._foward == EntityForward.Left) {
+            scalex = -scalex
+        }
         this.body.setScale(scalex, 1, 1);
     }
 

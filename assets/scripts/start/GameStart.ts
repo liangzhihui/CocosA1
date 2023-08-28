@@ -4,6 +4,7 @@ import "../base";
 import { InputManager } from "../input/InputManager";
 import { ActorManager } from "../module/actor/ctrl/ActorManager";
 import { GameElement } from "./GameElement";
+import { ResManager } from "../module/res/ResManager";
 
 @ccclass("GameStart")
 export class GameStart extends Component {
@@ -17,6 +18,8 @@ export class GameStart extends Component {
         let gameControl = new Node("GameControl");
         let inputManager = gameControl.addComponent(InputManager);
 
+        let resManager = gameControl.addComponent(ResManager);
+
         let actorManager = gameControl.addComponent(ActorManager);
         actorManager.rolePrefab = this.element.rolePrefab;
         actorManager.actorLayer = this.element.actorLayer;
@@ -26,6 +29,7 @@ export class GameStart extends Component {
         let mainui = this.element.mainui
 
         A1.input = inputManager.inputState;
+        A1.resManager = resManager;
         A1.actorManager = actorManager;
         A1.mainui = mainui;
     }
