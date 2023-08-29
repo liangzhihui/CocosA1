@@ -3,6 +3,10 @@ import { Contact2DType } from 'cc';
 import { _decorator, Component, Node } from 'cc';
 import { PhysicGroupIndex } from '../../const/PhysicGroupIndex';
 import { IPhysics2DContact } from 'cc';
+import { EntityBornData } from '../actor/entity/EntityBornData';
+import { EntitySide } from '../../const/EntityConst';
+import { AILevel } from './AILevel';
+import { BehaviorManager } from '../../../../extensions/Behavior Creator/runtime/main';
 const { ccclass, property } = _decorator;
 
 @ccclass('Level')
@@ -11,7 +15,18 @@ export class Level extends Component {
     @property(Collider2D)
     public finalCollider: Collider2D = null;
 
-    start() {
+    @property(EntityBornData)
+    public roleBornData: EntityBornData = EntityBornData.create(EntitySide.Our);
+
+    @property([EntityBornData])
+    public enemyBornData: EntityBornData[] = [];
+
+    protected onLoad(): void {
+        A1.level = this;
+        BehaviorManager.getInstance().enabled = false;
+    }
+
+    protected start() {
         this.finalCollider.on(Contact2DType.BEGIN_CONTACT, this.onFinalBeginContact, this);
     }
 
@@ -23,6 +38,18 @@ export class Level extends Component {
                 A1.mainui.finishLevel(true);
             }
         }
+    }
+
+    /** 开始关卡 */
+    public startLevel() {
+        A1.actorManager.createActor(this.roleBornData);
+        BehaviorManager.getInstance().enabled = true;
+    }
+
+    /** 重置关卡 */
+    public resetLevel() {
+        A1.actorManager.removeAllActors();
+        BehaviorManager.getInstance().enabled = false;
     }
 }
 

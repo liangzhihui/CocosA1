@@ -14,9 +14,6 @@ export class GameElement extends Component {
     @property(Node)
     public actorLayer: Node = null;
 
-    @property(Prefab)
-    public rolePrefab: Prefab = null;
-
     @property(MainUI)
     public mainui: MainUI = null;
 }

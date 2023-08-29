@@ -21,7 +21,6 @@ export class GameStart extends Component {
         let resManager = gameControl.addComponent(ResManager);
 
         let actorManager = gameControl.addComponent(ActorManager);
-        actorManager.rolePrefab = this.element.rolePrefab;
         actorManager.actorLayer = this.element.actorLayer;
         actorManager.sceneLayer = this.element.sceneLayer;
         gameControl.setParent(this.node);

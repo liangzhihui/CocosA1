@@ -4,4 +4,5 @@ declare namespace A1 {
     export let resManager: import("../module/res/ResManager").ResManager;
     export let actorManager: import("../module/actor/ctrl/ActorManager").ActorManager;
     export let mainui: import("../module/main/MainUI").MainUI;
+    export let level: import("../module/level/Level").Level;
 }

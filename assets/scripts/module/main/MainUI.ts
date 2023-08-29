@@ -4,8 +4,6 @@ import { ComboView } from './ComboView';
 import { ResultUI } from '../result/ResultUI';
 import { StartUI } from './StartUI';
 import { Joystck } from '../../input/Joystck';
-import { EntityBornData } from '../actor/entity/EntityBornData';
-import { EntityForward, EntitySide } from '../../const/EntityConst';
 const { ccclass, property } = _decorator;
 
 @ccclass('MainUI')
@@ -30,24 +28,14 @@ export class MainUI extends Component {
     }
 
     startGame() {
-        let bornData = EntityBornData.create();
-        bornData.hp = 5;
-        bornData.pos.set(0, 0)
-        bornData.actorResUrl = "Role";
-        bornData.weaponResUrl = "RoleWeapon";
-        bornData.side = EntitySide.Our;
-        bornData.forward = EntityForward.Right;
-
-        A1.actorManager.createActor(bornData);
+        A1.level.startLevel();
         this.closeView(this.startUI);
         this.openView(this.stick);
         this.openView(this.hp);
-
-        bornData.dispose();
     }
 
     resetGame() {
-        A1.actorManager.removeAllActors();
+        A1.level.resetLevel();
         this.closeView(this.hp);
         this.closeView(this.combo);
         this.closeView(this.resultUI);

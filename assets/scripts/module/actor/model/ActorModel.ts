@@ -8,7 +8,7 @@ const { ccclass } = _decorator
 export class ActorModel {
 
     public role: Entity = null;
-    public actors: Entity[] = [];
+    public actors: {[entityId: number]: Entity} = Object.create(null);
     public obstacles: Node[] = [];
 
     private _nextId = 1;
