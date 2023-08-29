@@ -14,7 +14,8 @@ const WeaponResPrefix = "prefab/weapons/";
 
 const EventType = {
     addActor: "AddActor",
-    removeActor: "removeActor"
+    removeActor: "RemoveActor",
+    removeAllActor: "RemoveAllActor"
 }
 
 @ccclass("ActorManager")
@@ -88,6 +89,8 @@ export class ActorManager extends Component {
     }
 
     public removeActor(entityId: number) {
+        this.node.emit(EventType.removeActor, entityId);
+
         let role = this.model.role
         if (role && role.entityId == entityId) {
             removeFromParent(role.node, true);
@@ -104,6 +107,8 @@ export class ActorManager extends Component {
     }
 
     public removeAllActors() {
+        this.node.emit(EventType.removeAllActor);
+
         let model = this.model;
         let actors = model.actors;
         let actor: Entity;

@@ -375,7 +375,7 @@
     "hp": 5,
     "maxMoveSpeed": 10,
     "weaponAngleSpeed": 440,
-    "weaponMaxAngleSpeed": 0,
+    "weaponMaxAngleSpeed": 880,
     "weaponBeatback": 0
   },
   {
