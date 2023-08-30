@@ -25,7 +25,7 @@ export class EntityWeapon extends Component {
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
-        this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
+        // this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
     }
 
     public setRadius(value: number) {
@@ -45,6 +45,11 @@ export class EntityWeapon extends Component {
         if (otherGroup == PhysicGroupIndex.SceneObstacle ||
             otherGroup == PhysicGroupIndex.Weapon ||
             otherGroup == PhysicGroupIndex.Actor) {
+            if (otherGroup == PhysicGroupIndex.Actor) {
+                let actor = A1.actorManager.getWeaponOwer(otherCollider)
+                if (actor && actor.isDied)
+                    return;
+            }
             if (this.rotator && !this._limitReverse) {
                 this.rotator.reverseDirection(this.rotator.maxSpeed);
                 this.setLimitReverse();
@@ -52,6 +57,6 @@ export class EntityWeapon extends Component {
         }
     }
 
-    private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-    }
+    // private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    // }
 }

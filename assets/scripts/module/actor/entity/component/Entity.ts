@@ -6,6 +6,8 @@ import { EntityAttribute } from "../EntityAttribute";
 import { rangeMap } from "../../../../utils/utils";
 import { removeFromParent } from "../../../../utils/ccUtil";
 import { EntityForward, EntitySide } from "../../../../const/EntityConst";
+import { animation } from "cc";
+import { ActorAnimationGraphComponent } from "../../../../component/ActorAnimationGraphComponent";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -26,7 +28,9 @@ export class Entity extends Component {
     @property(Collider2D)
     public collider: Collider2D = null;
     @property(EntityAttribute)
-    attr: EntityAttribute = new EntityAttribute();
+    public attr: EntityAttribute = new EntityAttribute();
+    @property(animation.AnimationController)
+    public animationController?: animation.AnimationController = null;
 
     public weapon: EntityWeapon = null;
     public maxForce: number = 20;
@@ -34,6 +38,7 @@ export class Entity extends Component {
 
     @property
     public isRole: boolean = false;
+    public isDied: boolean = false
 
     @property
     private _entityId: number = 0;
@@ -58,16 +63,19 @@ export class Entity extends Component {
         this.setTargetNode(A1.actorManager.model.role.node);
     }
 
+    private _tran: UITransform = null;
     private _velocity: Vec2 = new Vec2();
     private _accelerate: Vec2 = new Vec2();
     private _targetNode: Node = null;
     private _target: Vec2 = new Vec2();
 
     protected onLoad(): void {
+        this._tran = this.node.getComponent(UITransform);
         this._bodyTrans = this.body.getComponent(UITransform);
         this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
-        this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
+        // this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
         this.attr.on(EntityAttribute.EventType.died, this._onDied, this);
+        this.node.on(ActorAnimationGraphComponent.EventType.kill, this._onKill, this);
     }
 
     protected start(): void {
@@ -110,6 +118,9 @@ export class Entity extends Component {
     }
 
     protected update(dt: number): void {
+        if (this.isDied)
+            return;
+
         if (this.isRole) {
             this.updateRoleControl();
             this.updateForward();
@@ -124,8 +135,15 @@ export class Entity extends Component {
         let weapon = this.weapon;
         if (weapon) {
             this.getPosition(tempPos)
-            weapon.node.setPosition(tempPos.x, tempPos.y);
+            let tran = this._tran;
+            weapon.node.setPosition(
+                tempPos.x + (0.5 - tran.anchorX) * tran.contentSize.width,
+                tempPos.y + (0.5 - tran.anchorY) * tran.contentSize.height
+            );
         }
+
+        if (this.animationController)
+            this.animationController.setValue('moveSpeed', this._velocity.length());
     }
 
     private updateForward() {
@@ -219,11 +237,14 @@ export class Entity extends Component {
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        if (this.isDied)
+            return;
+
         let otherGroup = otherCollider.group;
         if (otherGroup == PhysicGroupIndex.Weapon) {
             if (!this.isRole) {
                 let actor = A1.actorManager.getWeaponOwer(otherCollider);
-                if (!actor || actor.node == selfCollider.node)
+                if (!actor || actor.isDied || actor.node == selfCollider.node || actor.side == this.side)
                     return;
 
                 actor.attr.decHp();
@@ -231,22 +252,43 @@ export class Entity extends Component {
                 this.getWorldPosition(v2_2, actor.node);
                 Vec2.subtract(v2, v2, v2_2);
                 setLength(v2, v2, actor.attr.weaponBeatback);
-                log(`Monster is hit began. impulse x:${v2.x} y:${v2.y}`);
+                // log(`Monster is hit began. impulse x:${v2.x} y:${v2.y}`);
                 this.rigidBody.applyLinearImpulse(v2, this.rigidBody.getWorldCenter(v2_2), true);
             }
         }
     }
 
-    private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
-        let otherGroup = otherCollider.group;
-        if (otherGroup == PhysicGroupIndex.Weapon) {
-            if (!this.isRole) {
-                log("Monster is hit ended.");
-            }
+    // private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+    //     if (this.isDied)
+    //         return;
+
+    //     let otherGroup = otherCollider.group;
+    //     if (otherGroup == PhysicGroupIndex.Weapon) {
+    //         if (!this.isRole) {
+    //             // log("Monster is hit ended.");
+    //         }
+    //     }
+    // }
+
+    private _onDied() {
+        this.isDied = true;
+        this.rigidBody.linearVelocity = Vec2.ZERO;
+        if (this.weapon)
+            this.weapon.rotator.setSpeed(0);
+        this.collider.sensor = true;
+
+        if (this.animationController) {
+            this.animationController.setValue("isDead", true);
+        }
+        else {
+            this._onKill();
         }
     }
 
-    private _onDied() {
-
+    private _onKill() {
+        A1.actorManager.removeActor(this.entityId);
+        if (this.isRole) {
+            A1.mainui.finishLevel(false);
+        }
     }
 }

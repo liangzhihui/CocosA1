@@ -55,9 +55,13 @@ export class ActorManager extends Component {
             arr.push(A1.resManager.aload(weaponResUrl));
         }
 
+        let actorId = this.model.generateId()
+
+        if (this.model.role || bornData.side != EntitySide.Our)
+            this.model.actors[actorId] = null;
+
         Promise.all(arr).then(([actorPrefab, weaponPrefab]) => {
             let actorNode = instantiate(actorPrefab);
-            let actorId = this.model.generateId()
             let actor = actorNode.getComponent(Entity);
             actor.entityId = actorId;
             actor.name = "Actor_" + actorId;
@@ -91,8 +95,13 @@ export class ActorManager extends Component {
     public removeActor(entityId: number) {
         this.node.emit(EventType.removeActor, entityId);
 
+        let weapon: EntityWeapon;
         let role = this.model.role
         if (role && role.entityId == entityId) {
+            if (weapon = role.weapon) {
+                role.weapon = null;
+                removeFromParent(weapon.node, true);
+            }
             removeFromParent(role.node, true);
             this.model.role = null;
         }
@@ -100,6 +109,10 @@ export class ActorManager extends Component {
             let actors = this.model.actors;
             let actor = actors[entityId];
             if (actor) {
+                if (weapon = actor.weapon) {
+                    actor.weapon = null;
+                    removeFromParent(weapon.node, true);
+                }
                 removeFromParent(actor.node, true);
                 actors[entityId] = null;
             }
@@ -125,6 +138,9 @@ export class ActorManager extends Component {
         model.actors = Object.create(null);
 
         let role = this.model.role
+        if (!role)
+            return;
+
         if (weapon = role.weapon) {
             role.weapon = null;
             removeFromParent(weapon.node, true);
@@ -135,7 +151,8 @@ export class ActorManager extends Component {
 
     public getWeaponOwer(collider: Collider2D) {
         let weapon: EntityWeapon;
-        weapon = this.model.role.weapon;
+        let role = this.model.role
+        weapon = role && role.weapon;
         if (weapon && weapon.collider == collider)
             return this.model.role;
 
