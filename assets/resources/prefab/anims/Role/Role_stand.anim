@@ -22,7 +22,7 @@
     "_events": [],
     "_embeddedPlayers": [],
     "_additiveSettings": {
-      "__id__": 7
+      "__id__": 6
     },
     "_auxiliaryCurveEntries": []
   },
@@ -36,7 +36,7 @@
       "proxy": null
     },
     "_channel": {
-      "__id__": 5
+      "__id__": 4
     }
   },
   {
@@ -45,15 +45,8 @@
       {
         "__id__": 3
       },
-      {
-        "__id__": 4
-      },
       "spriteFrame"
     ]
-  },
-  {
-    "__type__": "cc.animation.HierarchyPath",
-    "path": "Body"
   },
   {
     "__type__": "cc.animation.ComponentPath",
@@ -62,7 +55,7 @@
   {
     "__type__": "cc.animation.Channel",
     "_curve": {
-      "__id__": 6
+      "__id__": 5
     }
   },
   {
@@ -82,7 +75,7 @@
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "81282ad6-06cf-46a5-953f-98c5c5c5ccc2@f9941",
+        "__uuid__": "0e0bb8d9-19dd-4f15-9cd2-9b687df3f1e6@f9941",
         "__expectedType__": "cc.SpriteFrame"
       }
     ]
