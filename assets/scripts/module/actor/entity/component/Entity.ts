@@ -1,12 +1,11 @@
-import { Collider2D, Component, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, log } from "cc";
+import { Collider2D, Component, RigidBody2D, UITransform, Vec2, Vec3, _decorator, Node, Contact2DType, IPhysics2DContact, animation } from "cc";
 import { limit, setLength, zero } from "../../../../utils/vec2Util";
 import { EntityWeapon } from "./EntityWeapon";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
 import { EntityAttribute } from "../EntityAttribute";
 import { rangeMap } from "../../../../utils/utils";
-import { removeFromParent } from "../../../../utils/ccUtil";
+import { removeFromParent, setRigidBodyLinearVelocity } from "../../../../utils/ccUtil";
 import { EntityForward, EntitySide } from "../../../../const/EntityConst";
-import { animation } from "cc";
 import { ActorAnimationGraphComponent } from "../../../../component/ActorAnimationGraphComponent";
 const { ccclass, property } = _decorator;
 
@@ -14,7 +13,6 @@ const v2 = new Vec2();
 const v2_2 = new Vec2();
 const tempPos = new Vec2();
 const tempForce = new Vec2();
-const tempTarget = new Vec2();
 const v3 = new Vec3();
 
 @ccclass("Entity")
@@ -57,12 +55,6 @@ export class Entity extends Component {
     private _side: EntitySide = 0;
     get side() { return this._side; }
     set side(value) { this._side = value; }
-
-    @property
-    public get findRole() { return false; }
-    public set findRole(value: boolean) {
-        this.setTargetNode(A1.actorManager.model.role.node);
-    }
 
     private _tran: UITransform = null;
     private _velocity: Vec2 = new Vec2();
@@ -126,17 +118,16 @@ export class Entity extends Component {
     }
 
     protected update(dt: number): void {
-        if (this.isDied)
-            return;
-
-        if (this.isRole) {
-            this.updateRoleControl(dt);
-            this.updateForward();
-        }
-        else {
-            if (this._targetNode != null) {
-                this.getWorldPosition(this._target, this._targetNode);
-                this.updateSteerBehavior(dt);
+        if (this.canMove()) {
+            if (this.isRole) {
+                this.updateRoleControl(dt);
+                this.updateForward();
+            }
+            else {
+                if (this._targetNode != null) {
+                    this.getWorldPosition(this._target, this._targetNode);
+                    this.updateSteerBehavior(dt);
+                }
             }
         }
 
@@ -181,7 +172,7 @@ export class Entity extends Component {
         v2.set(x, y);
         setLength(v2, v2, this.attr.maxMoveSpeed);
         this._velocity.set(v2);
-        this.rigidBody.linearVelocity = v2;
+        setRigidBodyLinearVelocity(this.rigidBody, v2);
     }
 
     private updateSteerBehavior(dt: number) {
@@ -190,12 +181,12 @@ export class Entity extends Component {
         let steer = this.arrive(this._target, this.closeDistance, tempForce);
         this.applyForce(steer);
 
-        const obstacles = A1.actorManager.model.obstacles;
-        obstacles.forEach(obstacle => {
-            this.getWorldPosition(tempTarget, obstacle);
-            let steer = this.flee(tempTarget, 150, tempForce);
-            this.applyForce(steer);
-        });
+        // const obstacles = A1.actorManager.model.obstacles;
+        // obstacles.forEach(obstacle => {
+        //     this.getWorldPosition(tempTarget, obstacle);
+        //     let steer = this.flee(tempTarget, 150, tempForce);
+        //     this.applyForce(steer);
+        // });
 
         limit(this._accelerate, this._accelerate, this.maxForce);
 
@@ -205,7 +196,7 @@ export class Entity extends Component {
 
         zero(a);
 
-        this.rigidBody.linearVelocity = v;
+        setRigidBodyLinearVelocity(this.rigidBody, v);
     }
 
     public applyForce(force: Vec2) {
@@ -245,6 +236,27 @@ export class Entity extends Component {
 
     public setTargetNode(node: Node) {
         this._targetNode = node;
+        if (!node) {
+            this.stopMove();
+        }
+    }
+
+    public stopMove() {
+        this._velocity.set(Vec2.ZERO);
+        setRigidBodyLinearVelocity(this.rigidBody, Vec2.ZERO);
+    }
+
+    public canMove() {
+        if (this.isDied) {
+            return false;
+        }
+        return true;
+    }
+
+    private _limitDecHp: boolean = false;
+    private setLimitDecHp() {
+        this._limitDecHp = true;
+        this.scheduleOnce(() => this._limitDecHp = false, 0.1);
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -257,9 +269,13 @@ export class Entity extends Component {
             if (!actor || actor.isDied || actor.node == selfCollider.node || actor.side == this.side)
                 return;
 
-            this.attr.decHp();
+            if (!this._limitDecHp) {
+                this.setLimitDecHp();
+                this.attr.decHp();
+            }
 
             if (!this.isRole && !this.isDied) {
+                this.stopMove();
                 this.getWorldPosition(v2, selfCollider.node);
                 this.getWorldPosition(v2_2, actor.node);
                 Vec2.subtract(v2, v2, v2_2);
@@ -285,10 +301,10 @@ export class Entity extends Component {
             this.animationController.setValue("isDead", true);
         }
 
+        this.isDied = true;
+        this.stopMove();
         this.scheduleOnce(() => {
-            this.isDied = true;
             this.collider.enabled = false;
-            this.rigidBody.linearVelocity = Vec2.ZERO;
             this.setWeapon(null);
             if (!this.animationController)
                 this._onKill();

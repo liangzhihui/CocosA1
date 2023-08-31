@@ -445,7 +445,7 @@
     "_type": 2,
     "_allowSleep": false,
     "_gravityScale": 0,
-    "_linearDamping": 10,
+    "_linearDamping": 0,
     "_angularDamping": 0,
     "_linearVelocity": {
       "__type__": "cc.Vec2",
@@ -476,7 +476,7 @@
     "_group": 4,
     "_density": 1,
     "_sensor": false,
-    "_friction": 0.2,
+    "_friction": 0,
     "_restitution": 0,
     "_offset": {
       "__type__": "cc.Vec2",
@@ -620,7 +620,7 @@
     "frameRate": 0,
     "startWhenEnabled": true,
     "pauseWhenDisabled": false,
-    "restartWhenComplete": false,
+    "restartWhenComplete": true,
     "resetValuesOnRestart": false,
     "logTaskChanges": false,
     "_id": ""

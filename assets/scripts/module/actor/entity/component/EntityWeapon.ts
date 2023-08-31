@@ -75,8 +75,8 @@ export class EntityWeapon extends Component {
             }
 
             if (this.rotator && !this._limitReverse) {
-                this.rotator.reverseDirection(this.rotator.maxSpeed);
                 this.setLimitReverse();
+                this.rotator.reverseDirection(this.rotator.maxSpeed);
             }
         }
     }

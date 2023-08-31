@@ -8292,9 +8292,9 @@
       "y": 0
     },
     "forward": 1,
-    "hp": 1,
-    "actorResUrl": "Monster1",
-    "weaponResUrl": "MonsterWeapon",
+    "hp": 2,
+    "actorResUrl": "Monster3",
+    "weaponResUrl": "MonsterWeapon02",
     "side": 2
   },
   {
@@ -8305,9 +8305,9 @@
       "y": 190
     },
     "forward": 1,
-    "hp": 1,
-    "actorResUrl": "Monster1",
-    "weaponResUrl": "MonsterWeapon",
+    "hp": 2,
+    "actorResUrl": "Monster3",
+    "weaponResUrl": "MonsterWeapon02",
     "side": 2
   },
   {
@@ -8318,9 +8318,9 @@
       "y": -190
     },
     "forward": 1,
-    "hp": 1,
-    "actorResUrl": "Monster1",
-    "weaponResUrl": "MonsterWeapon",
+    "hp": 2,
+    "actorResUrl": "Monster3",
+    "weaponResUrl": "MonsterWeapon02",
     "side": 2
   },
   {
