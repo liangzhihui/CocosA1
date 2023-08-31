@@ -135,7 +135,7 @@ export class Entity extends Component {
         }
         else {
             if (this._targetNode != null) {
-                this.getWorldPosition(this._target, this._targetNode)
+                this.getWorldPosition(this._target, this._targetNode);
                 this.updateSteerBehavior(dt);
             }
         }

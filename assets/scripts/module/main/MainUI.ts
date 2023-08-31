@@ -43,6 +43,7 @@ export class MainUI extends Component {
     }
 
     finishLevel(win: boolean) {
+        A1.level.finishLevel(win);
         this.closeView(this.stick);
         this.openView(this.resultUI);
         this.resultUI.updateView(win);

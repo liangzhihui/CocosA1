@@ -45,10 +45,14 @@ export class Level extends Component {
         BehaviorManager.getInstance().enabled = true;
     }
 
+    /** 完成关卡 */
+    public finishLevel(win: boolean) {
+        BehaviorManager.getInstance().enabled = false;
+    }
+
     /** 重置关卡 */
     public resetLevel() {
         A1.actorManager.removeAllActors();
-        BehaviorManager.getInstance().enabled = false;
     }
 }
 

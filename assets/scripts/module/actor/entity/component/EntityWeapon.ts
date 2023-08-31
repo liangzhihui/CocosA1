@@ -20,6 +20,8 @@ export class EntityWeapon extends Component {
     get side() { return this._side; }
     set side(value) { this._side = value; }
 
+    private _attackRange: number = 0;
+
     private _limitReverse: boolean = false;
     private setLimitReverse() {
         this._limitReverse = true;
@@ -28,12 +30,19 @@ export class EntityWeapon extends Component {
 
     protected onLoad(): void {
         this._bodyTrans = this.body.getComponent(UITransform);
-        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         // this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
     }
 
+    public getAttackRange() {
+        return this._attackRange;
+    }
+
     public setRadius(value: number) {
-        this.rigidBody.node.setPosition(value + this.getBodyRadius(), 0);
+        let bodyRadius = this.getBodyRadius();
+        let x = value + bodyRadius;
+        this._attackRange = x + bodyRadius;
+        this.rigidBody.node.setPosition(x, 0);
     }
 
     public getBodyRadius() {

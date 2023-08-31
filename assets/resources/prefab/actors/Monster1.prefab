@@ -633,7 +633,7 @@
     "frameRate": 0,
     "startWhenEnabled": true,
     "pauseWhenDisabled": false,
-    "restartWhenComplete": false,
+    "restartWhenComplete": true,
     "resetValuesOnRestart": false,
     "logTaskChanges": false,
     "_id": ""

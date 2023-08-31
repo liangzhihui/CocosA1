@@ -359,7 +359,7 @@
       "z": 1
     },
     "_mobility": 0,
-    "_layer": 2,
+    "_layer": 33554432,
     "_euler": {
       "__type__": "cc.Vec3",
       "x": 0,
@@ -578,7 +578,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 229.97143046061197,
+      "width": 230,
       "height": 81.6
     },
     "_anchorPoint": {
@@ -617,7 +617,7 @@
     "_string": "恭喜通关",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 72.36923076923077,
+    "_actualFontSize": 56,
     "_fontSize": 56,
     "_fontFamily": "Arial",
     "_lineHeight": 60,
@@ -1048,7 +1048,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 83.98926871163503,
+      "width": 84,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1087,7 +1087,7 @@
     "_string": "不好玩",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 36.184615384615384,
+    "_actualFontSize": 28,
     "_fontSize": 28,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
@@ -1386,7 +1386,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 111.98569161551339,
+      "width": 112,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -1425,7 +1425,7 @@
     "_string": "太好玩了",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 36.184615384615384,
+    "_actualFontSize": 28,
     "_fontSize": 28,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
@@ -1724,8 +1724,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 119.97914541335332,
-      "height": 50.400000000000006
+      "width": 120,
+      "height": 50.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1763,7 +1763,7 @@
     "_string": "前往下一关",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 31.01538461538462,
+    "_actualFontSize": 24,
     "_fontSize": 24,
     "_fontFamily": "Arial",
     "_lineHeight": 40,
