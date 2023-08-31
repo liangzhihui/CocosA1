@@ -25,11 +25,10 @@ export class GameStart extends Component {
         actorManager.sceneLayer = this.element.sceneLayer;
         gameControl.setParent(this.node);
 
-        let mainui = this.element.mainui
-
         A1.input = inputManager.inputState;
         A1.resManager = resManager;
         A1.actorManager = actorManager;
-        A1.mainui = mainui;
+        A1.sceneCamera = this.element.sceneCamera;
+        A1.mainui = this.element.mainui;
     }
 }

@@ -1,12 +1,13 @@
-import { _decorator, Camera, Component, Node, Prefab } from 'cc';
+import { _decorator, Component, Node } from 'cc';
 import { MainUI } from '../module/main/MainUI';
+import { CameraController } from '../module/camera/CameraController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameElement')
 export class GameElement extends Component {
 
-    @property(Camera)
-    public sceneCamera: Camera = null;
+    @property(CameraController)
+    public sceneCamera: CameraController = null;
 
     @property(Node)
     public sceneLayer: Node = null;

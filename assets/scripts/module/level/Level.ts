@@ -1,11 +1,10 @@
-import { Collider2D } from 'cc';
-import { Contact2DType } from 'cc';
-import { _decorator, Component, Node } from 'cc';
+import { Collider2D, Contact2DType, isValid, Rect, UITransform, _decorator, Component, Node, IPhysics2DContact } from 'cc';
 import { PhysicGroupIndex } from '../../const/PhysicGroupIndex';
-import { IPhysics2DContact } from 'cc';
 import { EntityBornData } from '../actor/entity/EntityBornData';
 import { EntitySide } from '../../const/EntityConst';
 import { BehaviorManager } from '../../../../extensions/Behavior Creator/runtime/main';
+import { ActorManager } from '../actor/ctrl/ActorManager';
+import { Entity } from '../actor/entity/component/Entity';
 const { ccclass, property } = _decorator;
 
 @ccclass('Level')
@@ -20,13 +19,26 @@ export class Level extends Component {
     @property([EntityBornData])
     public enemyBornData: EntityBornData[] = [];
 
+    private _role: Entity;
+    private _rect: Rect
+
     protected onLoad(): void {
         A1.level = this;
+        let tran = this.node.getComponent(UITransform)
+        this._rect = tran.getBoundingBox()
         BehaviorManager.getInstance().enabled = false;
+        this.finalCollider.on(Contact2DType.BEGIN_CONTACT, this.onFinalBeginContact, this);
+        A1.actorManager.node.on(ActorManager.EventType.addActor, this._onAddActor, this);
+        A1.actorManager.node.on(ActorManager.EventType.removeActor, this._onRemoveActor, this);
+        A1.actorManager.node.on(ActorManager.EventType.removeAllActor, this._onRemoveAllActor, this);
     }
 
-    protected start() {
-        this.finalCollider.on(Contact2DType.BEGIN_CONTACT, this.onFinalBeginContact, this);
+    protected onDestroy(): void {
+        if (isValid(A1.actorManager)) {
+            A1.actorManager.node.off(ActorManager.EventType.addActor, this._onAddActor, this);
+            A1.actorManager.node.off(ActorManager.EventType.removeActor, this._onRemoveActor, this);
+            A1.actorManager.node.off(ActorManager.EventType.removeAllActor, this._onRemoveAllActor, this);
+        }
     }
 
     private onFinalBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -39,6 +51,24 @@ export class Level extends Component {
         }
     }
 
+    private _onAddActor(actor: Entity) {
+        if (actor.isRole) {
+            this._role = actor;
+            A1.sceneCamera.setTarget(actor.node);
+        }
+    }
+
+    private _onRemoveActor(entityId: number) {
+        if (this._role && this._role.entityId == entityId) {
+            A1.sceneCamera.setTarget(null);
+            this._role = null;
+        }
+    }
+
+    private _onRemoveAllActor() {
+        this._role = null;
+    }
+
     /** 开始关卡 */
     public startLevel() {
         A1.actorManager.createActor(this.roleBornData);
@@ -48,11 +78,25 @@ export class Level extends Component {
     /** 完成关卡 */
     public finishLevel(win: boolean) {
         BehaviorManager.getInstance().enabled = false;
+        A1.sceneCamera.setTarget(null);
+
+        let actors = A1.actorManager.model.actors
+        for (let entityId in actors) {
+            let actor = actors[entityId];
+            if (actor) {
+                actor.setTargetNode(null);
+            }
+        }
     }
 
     /** 重置关卡 */
     public resetLevel() {
         A1.actorManager.removeAllActors();
+    }
+
+    /** 获取关卡范围 */
+    public getRect() {
+        return this._rect
     }
 }
 

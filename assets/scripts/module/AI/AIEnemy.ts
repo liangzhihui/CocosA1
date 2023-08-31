@@ -2,6 +2,7 @@ import { _decorator, Node, Component, Vec2 } from "cc";
 import { Entity } from "../actor/entity/component/Entity";
 import { BehaviorStatus } from "../../../../extensions/Behavior Creator/runtime/main";
 import { ActorManager } from "../actor/ctrl/ActorManager";
+import { isValid } from "cc";
 const { ccclass } = _decorator;
 
 const v2 = new Vec2();
@@ -18,11 +19,15 @@ export class AIEnemy extends Component {
         this.target = A1.actorManager.model.role;
         A1.actorManager.node.on(ActorManager.EventType.addActor, this._onAddActor, this);
         A1.actorManager.node.on(ActorManager.EventType.removeActor, this._onRemoveActor, this);
+        A1.actorManager.node.on(ActorManager.EventType.removeAllActor, this._onRemoveAllActor, this);
     }
 
     protected onDestroy(): void {
-        A1.actorManager.node.off(ActorManager.EventType.addActor, this._onAddActor, this);
-        A1.actorManager.node.off(ActorManager.EventType.removeActor, this._onRemoveActor, this);
+        if (isValid(A1.actorManager)) {
+            A1.actorManager.node.off(ActorManager.EventType.addActor, this._onAddActor, this);
+            A1.actorManager.node.off(ActorManager.EventType.removeActor, this._onRemoveActor, this);
+            A1.actorManager.node.off(ActorManager.EventType.removeAllActor, this._onRemoveAllActor, this);
+        }
     }
 
     canAttack() {
@@ -64,5 +69,10 @@ export class AIEnemy extends Component {
             this.target = null;
             this.entity.setTargetNode(null);
         }
+    }
+
+    private _onRemoveAllActor() {
+        this.entity = null;
+        this.target = null;
     }
 }
