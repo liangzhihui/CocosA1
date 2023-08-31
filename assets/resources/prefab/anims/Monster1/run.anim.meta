@@ -2,12 +2,12 @@
   "ver": "2.0.3",
   "importer": "animation-clip",
   "imported": true,
-  "uuid": "a87f451c-ab66-4470-9e1c-bff9982f1dfa",
+  "uuid": "4063483c-aa4d-4335-9986-e270d22c1721",
   "files": [
     ".cconb"
   ],
   "subMetas": {},
   "userData": {
-    "name": "Role_dead"
+    "name": "run"
   }
 }

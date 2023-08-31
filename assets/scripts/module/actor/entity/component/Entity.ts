@@ -23,13 +23,14 @@ export class Entity extends Component {
     @property(Node)
     public body: Node = null;
     private _bodyTrans: UITransform = null;
+    private _bodyScaleX: number = 1;
     @property(RigidBody2D)
     public rigidBody: RigidBody2D = null;
     @property(Collider2D)
     public collider: Collider2D = null;
     @property(EntityAttribute)
     public attr: EntityAttribute = new EntityAttribute();
-    @property(animation.AnimationController)
+
     public animationController?: animation.AnimationController = null;
 
     public weapon: EntityWeapon = null;
@@ -71,8 +72,12 @@ export class Entity extends Component {
 
     protected onLoad(): void {
         this._tran = this.node.getComponent(UITransform);
+        this.animationController = this.node.getComponent(animation.AnimationController);
+
         this._bodyTrans = this.body.getComponent(UITransform);
-        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this)
+        this._bodyScaleX = this.body.scale.x >= 0 ? 1 : -1;
+
+        this.collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         // this.collider.on(Contact2DType.END_CONTACT, this.onEndContack, this)
         this.attr.on(EntityAttribute.EventType.died, this._onDied, this);
         this.node.on(ActorAnimationGraphComponent.EventType.kill, this._onKill, this);
@@ -94,7 +99,9 @@ export class Entity extends Component {
         return out;
     }
 
-    public setWeapon(weapon: EntityWeapon, linkLength: number) {
+    public setWeapon(weapon: EntityWeapon, linkLength: number)
+    public setWeapon(weapon: null)
+    public setWeapon(weapon: EntityWeapon, linkLength?: number) {
         let preWeapon = this.weapon;
         if (preWeapon) {
             removeFromParent(preWeapon.node, true);
@@ -103,6 +110,7 @@ export class Entity extends Component {
         this.weapon = weapon
 
         if (weapon) {
+            weapon.side = this.side;
             weapon.rotator.setSpeed(this.attr.weaponAngleSpeed);
             weapon.rotator.setMaxSpeed(this.attr.weaponMaxAngleSpeed);
             weapon.setRadius(this.getBodyRadius() + linkLength)
@@ -122,7 +130,7 @@ export class Entity extends Component {
             return;
 
         if (this.isRole) {
-            this.updateRoleControl();
+            this.updateRoleControl(dt);
             this.updateForward();
         }
         else {
@@ -159,14 +167,17 @@ export class Entity extends Component {
     private updateScaleWithForward() {
         let scalex = Math.abs(this.body.getScale(v3).x);
         if (this._foward == EntityForward.Left) {
-            scalex = -scalex
+            scalex = -scalex;
         }
+        scalex *= this._bodyScaleX;
         this.body.setScale(scalex, 1, 1);
     }
 
-    private updateRoleControl() {
-        let x = A1.input.getAxis("Horizontal");
-        let y = A1.input.getAxis("Vertical");
+    private updateRoleControl(dt: number) {
+        let input = A1.input;
+        let x = input.getAxis("Horizontal");
+        let y = input.getAxis("Vertical");
+        
         v2.set(x, y);
         setLength(v2, v2, this.attr.maxMoveSpeed);
         this._velocity.set(v2);
@@ -242,17 +253,17 @@ export class Entity extends Component {
 
         let otherGroup = otherCollider.group;
         if (otherGroup == PhysicGroupIndex.Weapon) {
-            if (!this.isRole) {
-                let actor = A1.actorManager.getWeaponOwer(otherCollider);
-                if (!actor || actor.isDied || actor.node == selfCollider.node || actor.side == this.side)
-                    return;
+            let actor = A1.actorManager.getWeaponOwer(otherCollider);
+            if (!actor || actor.isDied || actor.node == selfCollider.node || actor.side == this.side)
+                return;
 
-                actor.attr.decHp();
+            this.attr.decHp();
+
+            if (!this.isRole && !this.isDied) {
                 this.getWorldPosition(v2, selfCollider.node);
                 this.getWorldPosition(v2_2, actor.node);
                 Vec2.subtract(v2, v2, v2_2);
                 setLength(v2, v2, actor.attr.weaponBeatback);
-                // log(`Monster is hit began. impulse x:${v2.x} y:${v2.y}`);
                 this.rigidBody.applyLinearImpulse(v2, this.rigidBody.getWorldCenter(v2_2), true);
             }
         }
@@ -261,7 +272,6 @@ export class Entity extends Component {
     // private onEndContack(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
     //     if (this.isDied)
     //         return;
-
     //     let otherGroup = otherCollider.group;
     //     if (otherGroup == PhysicGroupIndex.Weapon) {
     //         if (!this.isRole) {
@@ -271,18 +281,18 @@ export class Entity extends Component {
     // }
 
     private _onDied() {
-        this.isDied = true;
-        this.rigidBody.linearVelocity = Vec2.ZERO;
-        if (this.weapon)
-            this.weapon.rotator.setSpeed(0);
-        this.collider.sensor = true;
-
         if (this.animationController) {
             this.animationController.setValue("isDead", true);
         }
-        else {
-            this._onKill();
-        }
+
+        this.scheduleOnce(() => {
+            this.isDied = true;
+            this.collider.enabled = false;
+            this.rigidBody.linearVelocity = Vec2.ZERO;
+            this.setWeapon(null);
+            if (!this.animationController)
+                this._onKill();
+        });
     }
 
     private _onKill() {

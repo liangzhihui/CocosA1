@@ -47,18 +47,19 @@ export class ActorManager extends Component {
 
     public createActor(bornData: EntityBornData) {
         let arr: Promise<Prefab>[] = [];
-        let actorResUrl = ActorResPrefix + bornData.actorResUrl;
-        arr.push(A1.resManager.aload(actorResUrl));
+        let actorResUrl = bornData.actorResUrl;
+        arr.push(A1.resManager.aload(ActorResPrefix + actorResUrl));
 
-        let weaponResUrl = WeaponResPrefix + bornData.weaponResUrl;
+        let weaponResUrl = bornData.weaponResUrl;
         if (weaponResUrl) {
-            arr.push(A1.resManager.aload(weaponResUrl));
+            arr.push(A1.resManager.aload(WeaponResPrefix + weaponResUrl));
         }
 
         let actorId = this.model.generateId()
 
-        if (this.model.role || bornData.side != EntitySide.Our)
-            this.model.actors[actorId] = null;
+        if (this.model.role || bornData.side != EntitySide.Our) {
+            this.model.actorCount++;
+        }
 
         Promise.all(arr).then(([actorPrefab, weaponPrefab]) => {
             let actorNode = instantiate(actorPrefab);
@@ -114,7 +115,8 @@ export class ActorManager extends Component {
                     removeFromParent(weapon.node, true);
                 }
                 removeFromParent(actor.node, true);
-                actors[entityId] = null;
+                delete actors[entityId];
+                this.model.actorCount--;
             }
         }
     }
@@ -129,15 +131,18 @@ export class ActorManager extends Component {
         for (let entityId in actors) {
             actor = actors[entityId];
 
-            if (weapon = actor.weapon) {
-                actor.weapon = null;
-                removeFromParent(weapon.node, true);
+            if (actor) {
+                if (weapon = actor.weapon) {
+                    actor.weapon = null;
+                    removeFromParent(weapon.node, true);
+                }
+                removeFromParent(actor.node, true);
             }
-            removeFromParent(actor.node, true);
         }
         model.actors = Object.create(null);
+        model.actorCount = 0;
 
-        let role = this.model.role
+        let role = model.role
         if (!role)
             return;
 
@@ -146,7 +151,23 @@ export class ActorManager extends Component {
             removeFromParent(weapon.node, true);
         }
         removeFromParent(role.node, true);
-        this.model.role = null;
+        model.role = null;
+        model.resetGenerateId();
+    }
+
+    public getActor(collider: Collider2D) {
+        let role = this.model.role
+        if (role && role.collider == collider)
+            return role;
+
+        let actors = this.model.actors;
+        let actor: Entity;
+        for (let entityId in actors) {
+            actor = actors[entityId];
+            if (actor && actor.collider == collider) {
+                return actor;
+            }
+        }
     }
 
     public getWeaponOwer(collider: Collider2D) {
@@ -154,15 +175,17 @@ export class ActorManager extends Component {
         let role = this.model.role
         weapon = role && role.weapon;
         if (weapon && weapon.collider == collider)
-            return this.model.role;
+            return role;
 
         let actors = this.model.actors;
         let actor: Entity;
         for (let entityId in actors) {
             actor = actors[entityId];
-            weapon = actor.weapon;
-            if (weapon && weapon.collider == collider)
-                return actor;
+            if (actor) {
+                weapon = actor.weapon;
+                if (weapon && weapon.collider == collider)
+                    return actor;
+            }
         }
     }
 

@@ -5,7 +5,6 @@ import { PhysicGroupIndex } from '../../const/PhysicGroupIndex';
 import { IPhysics2DContact } from 'cc';
 import { EntityBornData } from '../actor/entity/EntityBornData';
 import { EntitySide } from '../../const/EntityConst';
-import { AILevel } from './AILevel';
 import { BehaviorManager } from '../../../../extensions/Behavior Creator/runtime/main';
 const { ccclass, property } = _decorator;
 

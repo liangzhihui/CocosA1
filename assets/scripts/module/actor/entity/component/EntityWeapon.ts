@@ -1,6 +1,7 @@
 import { Collider2D, Component, RigidBody2D, _decorator, Node, UITransform, Contact2DType, IPhysics2DContact } from "cc";
 import { EntityWeaponRotator } from "./EntityWeaponRotator";
 import { PhysicGroupIndex } from "../../../../const/PhysicGroupIndex";
+import { EntitySide } from "../../../../const/EntityConst";
 const { ccclass, property } = _decorator;
 
 @ccclass("EntityWeapon")
@@ -15,11 +16,14 @@ export class EntityWeapon extends Component {
     @property(EntityWeaponRotator)
     public rotator: EntityWeaponRotator = null;
 
+    private _side: EntitySide = 0;
+    get side() { return this._side; }
+    set side(value) { this._side = value; }
+
     private _limitReverse: boolean = false;
     private setLimitReverse() {
         this._limitReverse = true;
         this.scheduleOnce(() => this._limitReverse = false);
-
     }
 
     protected onLoad(): void {
@@ -45,11 +49,22 @@ export class EntityWeapon extends Component {
         if (otherGroup == PhysicGroupIndex.SceneObstacle ||
             otherGroup == PhysicGroupIndex.Weapon ||
             otherGroup == PhysicGroupIndex.Actor) {
+
             if (otherGroup == PhysicGroupIndex.Actor) {
-                let actor = A1.actorManager.getWeaponOwer(otherCollider)
-                if (actor && actor.isDied)
-                    return;
+                let actor = A1.actorManager.getActor(otherCollider);
+                if (actor) {
+                    if (actor.isDied || actor.side == this.side)
+                        return;
+                }
             }
+            else if (otherGroup == PhysicGroupIndex.Weapon) {
+                let actor = A1.actorManager.getWeaponOwer(otherCollider)
+                if (actor) {
+                    if (actor.isDied || actor.side == this.side)
+                        return;
+                }
+            }
+
             if (this.rotator && !this._limitReverse) {
                 this.rotator.reverseDirection(this.rotator.maxSpeed);
                 this.setLimitReverse();

@@ -147,7 +147,7 @@
   },
   {
     "__type__": "ActorAnimationGraphComponent",
-    "animationName": "Role_stand",
+    "animationName": "stand",
     "isDead": false
   },
   {
@@ -186,7 +186,7 @@
   },
   {
     "__type__": "ActorAnimationGraphComponent",
-    "animationName": "Role_run",
+    "animationName": "run",
     "isDead": false
   },
   {
@@ -203,8 +203,8 @@
       "name": "Dead",
       "id": "16934100074050.038006539264900496",
       "clone": null,
-      "centerX": 207.5,
-      "centerY": -81
+      "centerX": 200.5,
+      "centerY": -72
     },
     "name": "Dead",
     "_components": [
@@ -225,7 +225,7 @@
   },
   {
     "__type__": "ActorAnimationGraphComponent",
-    "animationName": "Role_dead",
+    "animationName": "dead",
     "isDead": true
   },
   {

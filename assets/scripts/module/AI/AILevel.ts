@@ -1,7 +1,6 @@
 import { _decorator, Component } from "cc";
-import { Level } from "./Level";
-import { math } from "cc";
 import { BehaviorStatus, BehaviorTree } from "../../../../extensions/Behavior Creator/runtime/main";
+import { Level } from "../level/Level";
 const { ccclass } = _decorator;
 
 @ccclass("AILevel")
@@ -29,7 +28,7 @@ export class AILevel extends Component {
     /** 敌人数不足 */
     public onEnemyFewer(btNode, status: BehaviorStatus, param: string) {
         let model = A1.actorManager.model;
-        let actorCount = Object.keys(model.actors).length;
+        let actorCount = model.actorCount;
 
         let v = +param;
         if (!isNaN(v) && v > 0) {
