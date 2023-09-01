@@ -4,6 +4,7 @@ import { BehaviorStatus } from "../../../../extensions/Behavior Creator/runtime/
 import { ActorManager } from "../actor/ctrl/ActorManager";
 import { isValid } from "cc";
 import { BulletDamager } from "../bullet/BulletDamager";
+import { randomRangeInt } from "cc";
 const { ccclass } = _decorator;
 
 const v2 = new Vec2();

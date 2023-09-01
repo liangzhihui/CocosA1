@@ -423,6 +423,8 @@
     },
     "isRole": false,
     "_entityId": 0,
+    "_side": 0,
+    "_sight": 0,
     "_id": ""
   },
   {

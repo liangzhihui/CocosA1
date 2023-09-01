@@ -1,4 +1,4 @@
-import { Vec2 } from "cc";
+import { Vec2, Node } from "cc";
 import { _decorator } from "cc";
 import { ObjectPool } from "../../../utils/ObjectPool";
 import { EntityForward, EntitySide } from "../../../const/EntityConst";
@@ -9,8 +9,8 @@ const { ccclass, property } = _decorator;
 
 @ccclass("EntityBornData")
 export class EntityBornData {
-    @property({ tooltip: DEV && "角色初始坐标"})
-    pos: Vec2 = new Vec2();
+    @property({ tooltip: DEV && "角色初始坐标", type: Node })
+    bornNode: Node = null;
 
     @property({ tooltip: DEV && "角色初始朝向", type: EntityForward })
     forward: EntityForward = EntityForward.Left;

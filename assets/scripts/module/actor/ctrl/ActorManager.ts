@@ -8,10 +8,12 @@ import { removeFromParent } from "../../../utils/ccUtil";
 import { EntityBornData } from "../entity/EntityBornData";
 import { EntitySide } from "../../../const/EntityConst";
 import { ProjectileBulletSystem } from "../../bullet/ProjectileBulletSystem";
+import { Vec3 } from "cc";
 
 const { ccclass, property } = _decorator
 const ActorResPrefix = "prefab/actors/";
 const WeaponResPrefix = "prefab/weapons/";
+const v3 = new Vec3();
 
 const EventType = {
     addActor: "AddActor",
@@ -90,8 +92,9 @@ export class ActorManager extends Component {
                 this.model.actors[actorId] = actor;
             }
 
-            actor.node.setPosition(bornData.pos.x, bornData.pos.y);
+            bornData.bornNode.getWorldPosition(v3);
             actor.node.setParent(this.actorLayer);
+            actor.node.setWorldPosition(v3.x, v3.y, v3.z);
 
             if (weaponPrefab) {
                 let weaponNode = instantiate(weaponPrefab);
