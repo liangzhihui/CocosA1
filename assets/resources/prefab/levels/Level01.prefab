@@ -34,17 +34,17 @@
         "__id__": 364
       },
       {
-        "__id__": 370
-      },
-      {
-        "__id__": 372
-      },
-      {
         "__id__": 374
+      },
+      {
+        "__id__": 376
+      },
+      {
+        "__id__": 378
       }
     ],
     "_prefab": {
-      "__id__": 376
+      "__id__": 380
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -8256,13 +8256,13 @@
     },
     "enemyBornData": [
       {
-        "__id__": 367
-      },
-      {
         "__id__": 368
       },
       {
-        "__id__": 369
+        "__id__": 370
+      },
+      {
+        "__id__": 372
       }
     ],
     "_id": ""
@@ -8282,7 +8282,21 @@
     "hp": 5,
     "actorResUrl": "Role",
     "weaponResUrl": "RoleWeapon",
-    "side": 1
+    "side": 1,
+    "sight": 300,
+    "enableBullet": false,
+    "bullet": {
+      "__id__": 367
+    }
+  },
+  {
+    "__type__": "BulletData",
+    "energy": 0,
+    "size": 0,
+    "resUrl": "",
+    "trajectory": 0,
+    "speed": 0,
+    "accel": 0
   },
   {
     "__type__": "EntityBornData",
@@ -8293,9 +8307,23 @@
     },
     "forward": 1,
     "hp": 2,
-    "actorResUrl": "Monster3",
-    "weaponResUrl": "MonsterWeapon02",
-    "side": 2
+    "actorResUrl": "Monster1",
+    "weaponResUrl": "",
+    "side": 2,
+    "sight": 300,
+    "enableBullet": true,
+    "bullet": {
+      "__id__": 369
+    }
+  },
+  {
+    "__type__": "BulletData",
+    "energy": 100,
+    "size": 20,
+    "resUrl": "",
+    "trajectory": 0,
+    "speed": 10,
+    "accel": 1
   },
   {
     "__type__": "EntityBornData",
@@ -8306,9 +8334,23 @@
     },
     "forward": 1,
     "hp": 2,
-    "actorResUrl": "Monster3",
-    "weaponResUrl": "MonsterWeapon02",
-    "side": 2
+    "actorResUrl": "Monster1",
+    "weaponResUrl": "",
+    "side": 2,
+    "sight": 300,
+    "enableBullet": true,
+    "bullet": {
+      "__id__": 371
+    }
+  },
+  {
+    "__type__": "BulletData",
+    "energy": 100,
+    "size": 20,
+    "resUrl": "",
+    "trajectory": 0,
+    "speed": 10,
+    "accel": 0
   },
   {
     "__type__": "EntityBornData",
@@ -8319,9 +8361,23 @@
     },
     "forward": 1,
     "hp": 2,
-    "actorResUrl": "Monster3",
-    "weaponResUrl": "MonsterWeapon02",
-    "side": 2
+    "actorResUrl": "Monster1",
+    "weaponResUrl": "",
+    "side": 2,
+    "sight": 300,
+    "enableBullet": true,
+    "bullet": {
+      "__id__": 373
+    }
+  },
+  {
+    "__type__": "BulletData",
+    "energy": 100,
+    "size": 20,
+    "resUrl": "",
+    "trajectory": 0,
+    "speed": 10,
+    "accel": 0
   },
   {
     "__type__": "57329UxP9VOAa8MciTPhIOm",
@@ -8333,7 +8389,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 371
+      "__id__": 375
     },
     "_id": ""
   },
@@ -8351,7 +8407,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 373
+      "__id__": 377
     },
     "logAbort": true,
     "logInterrupt": true,
@@ -8379,7 +8435,7 @@
     },
     "_enabled": true,
     "__prefab": {
-      "__id__": 375
+      "__id__": 379
     },
     "jsonAsset": {
       "__uuid__": "551f4fb9-f29c-4352-a24c-ba071dcee0a8",

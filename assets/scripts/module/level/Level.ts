@@ -1,4 +1,4 @@
-import { Collider2D, Contact2DType, isValid, Rect, UITransform, _decorator, Component, Node, IPhysics2DContact } from 'cc';
+import { Collider2D, Contact2DType, isValid, Rect, UITransform, _decorator, Component, Node, IPhysics2DContact, Vec2 } from 'cc';
 import { PhysicGroupIndex } from '../../const/PhysicGroupIndex';
 import { EntityBornData } from '../actor/entity/EntityBornData';
 import { EntitySide } from '../../const/EntityConst';
@@ -72,12 +72,14 @@ export class Level extends Component {
     /** 开始关卡 */
     public startLevel() {
         A1.actorManager.createActor(this.roleBornData);
+        A1.bulletManager.enabled = true;
         BehaviorManager.getInstance().enabled = true;
     }
 
     /** 完成关卡 */
     public finishLevel(win: boolean) {
         BehaviorManager.getInstance().enabled = false;
+        A1.bulletManager.enabled = false;
         A1.sceneCamera.setTarget(null);
 
         let actors = A1.actorManager.model.actors
@@ -92,11 +94,17 @@ export class Level extends Component {
     /** 重置关卡 */
     public resetLevel() {
         A1.actorManager.removeAllActors();
+        A1.bulletManager.end();
     }
 
     /** 获取关卡范围 */
     public getRect() {
         return this._rect
+    }
+
+    /** 检查坐标的合法性 */
+    public checkPos(pos: Vec2) {
+        return this._rect ? this._rect.contains(pos) : false;
     }
 }
 

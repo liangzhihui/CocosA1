@@ -7,6 +7,7 @@ import { rangeMap } from "../../../../utils/utils";
 import { removeFromParent, setRigidBodyLinearVelocity } from "../../../../utils/ccUtil";
 import { EntityForward, EntitySide } from "../../../../const/EntityConst";
 import { ActorAnimationGraphComponent } from "../../../../component/ActorAnimationGraphComponent";
+import { ProjectileBulletSystem } from "../../../bullet/ProjectileBulletSystem";
 const { ccclass, property } = _decorator;
 
 const v2 = new Vec2();
@@ -29,6 +30,7 @@ export class Entity extends Component {
     @property(EntityAttribute)
     public attr: EntityAttribute = new EntityAttribute();
 
+    public projecttileBulletSystem?: ProjectileBulletSystem = null;
     public animationController?: animation.AnimationController = null;
 
     public weapon: EntityWeapon = null;
@@ -56,11 +58,19 @@ export class Entity extends Component {
     get side() { return this._side; }
     set side(value) { this._side = value; }
 
+    private _sight: number = 0;
+    get sight() { return this._sight; }
+    set sight(value) { this._sight = value; }
+
     private _tran: UITransform = null;
     private _velocity: Vec2 = new Vec2();
     private _accelerate: Vec2 = new Vec2();
     private _targetNode: Node = null;
     private _target: Vec2 = new Vec2();
+
+    public get transform() {
+        return this._tran;
+    }
 
     protected onLoad(): void {
         this._tran = this.node.getComponent(UITransform);
@@ -253,10 +263,10 @@ export class Entity extends Component {
         return true;
     }
 
-    private _limitDecHp: boolean = false;
-    private setLimitDecHp() {
-        this._limitDecHp = true;
-        this.scheduleOnce(() => this._limitDecHp = false, 0.1);
+    public limitDecHp: boolean = false;
+    public setLimitDecHp() {
+        this.limitDecHp = true;
+        this.scheduleOnce(() => this.limitDecHp = false, 0.1);
     }
 
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -269,7 +279,7 @@ export class Entity extends Component {
             if (!actor || actor.isDied || actor.node == selfCollider.node || actor.side == this.side)
                 return;
 
-            if (!this._limitDecHp) {
+            if (!this.limitDecHp) {
                 this.setLimitDecHp();
                 this.attr.decHp();
             }

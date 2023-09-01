@@ -7,6 +7,7 @@ import { PhysicGroupIndex } from "../../../const/PhysicGroupIndex";
 import { removeFromParent } from "../../../utils/ccUtil";
 import { EntityBornData } from "../entity/EntityBornData";
 import { EntitySide } from "../../../const/EntityConst";
+import { ProjectileBulletSystem } from "../../bullet/ProjectileBulletSystem";
 
 const { ccclass, property } = _decorator
 const ActorResPrefix = "prefab/actors/";
@@ -67,8 +68,19 @@ export class ActorManager extends Component {
             actor.entityId = actorId;
             actor.name = "Actor_" + actorId;
             actor.side = bornData.side;
+            actor.sight = bornData.sight;
             actor.attr.hp = bornData.hp;
             actor.forward = bornData.forward;
+            if (bornData.enableBullet) {
+                let pbs = new ProjectileBulletSystem();
+                pbs.setBulletEnergy(bornData.bullet.energy);
+                pbs.setBulletSize(bornData.bullet.size);
+                pbs.setBulletResUrl(bornData.bullet.resUrl);
+                pbs.setTrajectory(bornData.bullet.trajectory);
+                pbs.setTrajectorySpeed(bornData.bullet.speed);
+                pbs.setTrajectoryAccel(bornData.bullet.accel);
+                actor.projecttileBulletSystem = pbs
+            }
             if (actor.side == EntitySide.Our && !this.model.role) {
                 actor.isRole = true;
                 this.model.role = actor;

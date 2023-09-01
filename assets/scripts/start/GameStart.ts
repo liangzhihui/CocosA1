@@ -5,6 +5,7 @@ import { InputManager } from "../input/InputManager";
 import { ActorManager } from "../module/actor/ctrl/ActorManager";
 import { GameElement } from "./GameElement";
 import { ResManager } from "../module/res/ResManager";
+import { BulletManager } from "../module/bullet/BulletManager";
 
 @ccclass("GameStart")
 export class GameStart extends Component {
@@ -23,11 +24,17 @@ export class GameStart extends Component {
         let actorManager = gameControl.addComponent(ActorManager);
         actorManager.actorLayer = this.element.actorLayer;
         actorManager.sceneLayer = this.element.sceneLayer;
+
+        let bulletManager = gameControl.addComponent(BulletManager);
+        bulletManager.bulletLayer = this.element.bulletLayer;
+        bulletManager.bulletPrefab = this.element.bulletPrefab;
+
         gameControl.setParent(this.node);
 
         A1.input = inputManager.inputState;
         A1.resManager = resManager;
         A1.actorManager = actorManager;
+        A1.bulletManager = bulletManager;
         A1.sceneCamera = this.element.sceneCamera;
         A1.mainui = this.element.mainui;
     }

@@ -3,6 +3,7 @@ import { Entity } from "../actor/entity/component/Entity";
 import { BehaviorStatus } from "../../../../extensions/Behavior Creator/runtime/main";
 import { ActorManager } from "../actor/ctrl/ActorManager";
 import { isValid } from "cc";
+import { BulletDamager } from "../bullet/BulletDamager";
 const { ccclass } = _decorator;
 
 const v2 = new Vec2();
@@ -44,6 +45,21 @@ export class AIEnemy extends Component {
         return BehaviorStatus.Failure;
     }
 
+    onHasSight() {
+        if (!this.target || !this.entity)
+            return BehaviorStatus.Failure;
+
+        this.entity.getPosition(v2);
+        this.target.getPosition(v2_2);
+        // let d = Vec2.distance(v2, v2_2);
+
+        if (Math.abs(v2_2.x - v2.x) < this.entity.sight) {
+            return BehaviorStatus.Success;
+        }
+
+        return BehaviorStatus.Failure;
+    }
+
     onMoveToAttack() {
         if (!this.target || !this.entity) {
             return BehaviorStatus.Failure;
@@ -56,6 +72,23 @@ export class AIEnemy extends Component {
 
         this.entity.setTargetNode(this.target.node);
         return BehaviorStatus.Running;
+    }
+
+    onShoot() {
+        let pbs = this.entity && this.entity.projecttileBulletSystem;
+        if (pbs && this.target) {
+            this.entity.getPosition(v2);
+            v2.y += this.entity.getBodyRadius();
+
+            this.target.getPosition(v2_2);
+            v2_2.y += this.target.getBodyRadius();
+
+            pbs.createProjectileBullet(v2, v2_2)
+                .setObserver(BulletDamager.alloc(this.entity.side));
+            A1.bulletManager.manager(pbs);
+        }
+
+        return BehaviorStatus.Success;
     }
 
     private _onAddActor(actor: Entity) {

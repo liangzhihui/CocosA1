@@ -3,6 +3,7 @@ import { _decorator } from "cc";
 import { ObjectPool } from "../../../utils/ObjectPool";
 import { EntityForward, EntitySide } from "../../../const/EntityConst";
 import { DEV } from "cc/env";
+import { BulletData } from "../../bullet/BulletData";
 
 const { ccclass, property } = _decorator;
 
@@ -25,6 +26,14 @@ export class EntityBornData {
 
     @property({ tooltip: DEV && "角色阵营", type: EntitySide })
     side: EntitySide = EntitySide.Our;
+
+    @property({ tooltip: DEV && "角色视野范围" })
+    sight: number = 300;
+
+    @property
+    enableBullet = false;
+    @property({ type: BulletData, visible: function () { return this.enableBullet; } })
+    bullet: BulletData = new BulletData();
 
     static create(side?: EntitySide) {
         let res = ObjectPool.pop(EntityBornData)
